@@ -1,0 +1,110 @@
+version: '3.3'
+
+services:
+  dealscan-redis:
+    image: redis:latest
+    container_name: dealscan-redis
+    ports:
+      - "6379:6379"
+
+  dealscan-db:
+    image: postgres:latest
+    container_name: dealscan-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: dealscan
+
+  dealscan-api:
+    build:
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    image: dealscan-api:latest
+    container_name: dealscan-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=secret
+      - ENVIRONMENT=dev
+      - DATABASE_URL=postgres://postgres:postgres@dealscan-db/dealscan
+      - REDIS_URL=redis://dealscan-redis/0
+    depends_on:
+      - dealscan-db
+      - dealscan-redis
+    volumes:
+      - .:/usr/src/app
+
+  dealscan-migrations:
+    build:
+      dockerfile: Dockerfile
+    image: dealscan-migrations:latest
+    container_name: dealscan-migrations
+    restart: no
+    command: poetry run python manage.py migrate
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - dealscan-db
+      - dealscan-api
+      - dealscan-redis
+
+  dealscan-celery:
+    build:
+      dockerfile: Dockerfile
+    image: dealscan-celery:latest
+    container_name: dealscan-celery
+    command: celery -A . worker -Q default -n dealscan.%%h --loglevel=INFO --max-memory-per-child=512000 --concurrency=1
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - dealscan-api
+      - dealscan-db
+      - dealscan-redis
+    links:
+      - dealscan-api
+      - dealscan-db
+      - dealscan-redis
+
+  dealscan-celery-beat:
+      build:
+        dockerfile: Dockerfile
+      image: dealscan-celery-beat:latest
+      container_name: dealscan-celery-beat
+      command: celery -A . beat -S redbeat.RedBeatScheduler --loglevel=DEBUG --pidfile /tmp/dealscan-celerybeat.pid
+      volumes:
+        - .:/usr/src/app
+      depends_on:
+        - dealscan-api
+        - dealscan-db
+        - dealscan-redis
+      links:
+        - dealscan-api
+        - dealscan-db
+        - dealscan-redis
+
+  dealscan-celery-flower:
+      build:
+        dockerfile: Dockerfile
+      container_name: dealscan-celery-flower
+      command: celery -A . flower --loglevel=INFO --port=9090 --broker=redis://dealscan-redis:6379/0 --basic_auth=dealscan:dealscan
+      ports:
+        - "127.0.0.1:9090:9090"
+      restart: unless-stopped
+      volumes:
+        - .:/usr/src/app
+      depends_on:
+        - dealscan-api
+        - dealscan-db
+        - dealscan-redis
+      links:
+        - dealscan-api
+        - dealscan-db
+        - dealscan-redis

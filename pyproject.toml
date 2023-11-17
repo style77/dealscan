@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "dealscan"
+version = "0.1.0"
+description = "Web application for car dealers - Car deals scrapper"
+authors = ["Joachim Hodana <stylek777@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Django = "^4.2.7"
+dj-database-url = "^2.1.0"
+psycopg2-binary = "^2.9.9"
+django-guardian = "^2.4.0"
+django-simple-history = "^3.4.0"
+django-unfold = "^0.16.0"
+celery = "^5.3.5"
+django-celery-beat = "^2.5.0"
+celery-redbeat = "^2.1.1"
+django-redis = "^5.4.0"
+django-money = "^3.4.0"
+django-countries = "^7.5.1"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+black = "^23.11.0"
+mypy = "^1.6.0"
+isort = "^5.12.0"
+django-stubs = {extras = ["compatible-mypy"], version = "^4.2.6"}
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "dealscan.settings"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
