@@ -30,13 +30,19 @@ class Source(models.Model):
 class CarMake(models.Model):
     name = models.CharField(max_length=255, unique=True)
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class CarModel(models.Model):
     make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
     class Meta:
-        unique_together = ('make', 'name')
+        unique_together = ("make", "name")
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Offer(models.Model):
@@ -66,13 +72,13 @@ class Offer(models.Model):
 
     title = models.CharField(_("title"), max_length=1024)
     url = models.URLField(_("url"), unique=True)
-    publication_date = models.DateTimeField(_("publication_date"), )
+    publication_date = models.DateTimeField(
+        _("publication_date"),
+    )
 
     description = models.CharField(_("description"))
 
-    model = models.ForeignKey(
-        CarModel, on_delete=models.CASCADE, related_name="offers"
-    )
+    model = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="offers")
     trim = models.CharField(_("trim"), blank=True, null=True)
     generation = models.CharField(_("generation"), blank=True, null=True)
 
