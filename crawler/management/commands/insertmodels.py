@@ -1,18 +1,17 @@
-from typing import Any, Optional
+import time
+from typing import Any
+
+import pandas as pd
 from django.core.management import BaseCommand
 from django.db import transaction
 
 from crawler.models import CarMake, CarModel
 
-import pandas as pd
-
-import time
-
 
 class Command(BaseCommand):
     help = "inserts makes and models into database"
 
-    def handle(self, *args: Any, **options: Any) -> str | None:
+    def handle(self, *args: Any, **options: Any):
         start_time = time.time()
         df = pd.read_csv("crawler/management/data/car_data.csv")
 
@@ -20,13 +19,17 @@ class Command(BaseCommand):
 
         with transaction.atomic():
             for _, row in df.iterrows():
-                make, created = CarMake.objects.get_or_create(name=row["Make"].capitalize())
+                make, created = CarMake.objects.get_or_create(
+                    name=row["Make"].capitalize()
+                )
                 if created:
                     self.stdout.write(self.style.SUCCESS(f'Added "{make.name}" make'))
                 model = CarModel(make=make, name=row["Model"])
                 models.append(model)
 
-            inserted_models = CarModel.objects.bulk_create(models, ignore_conflicts=True)
+            inserted_models = CarModel.objects.bulk_create(
+                models, ignore_conflicts=True
+            )
 
         self.stdout.write(
             self.style.SUCCESS(

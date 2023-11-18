@@ -1,7 +1,8 @@
 from django.conf import settings
-from .sites import unfold_admin_site
 from django.conf.urls.static import static
 from django.urls import path
+
+from .sites import unfold_admin_site
 
 urlpatterns = [
     path("admin/", unfold_admin_site.urls),

@@ -1,13 +1,12 @@
 import os
 from pathlib import Path
 from typing import List
-from django.urls import reverse_lazy
-
-from django.utils.translation import gettext_lazy as _
-from django.templatetags.static import static
-from django.core.management.utils import get_random_secret_key
 
 import dj_database_url
+from django.core.management.utils import get_random_secret_key
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

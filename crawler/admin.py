@@ -1,8 +1,8 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from unfold.admin import ModelAdmin
+
+from crawler.models import CarMake, CarModel, Offer, OfferMetadata, Source
 from dealscan.sites import unfold_admin_site
-from crawler.models import Source, Offer, OfferMetadata, CarMake, CarModel
 
 
 @admin.register(Source, site=unfold_admin_site)

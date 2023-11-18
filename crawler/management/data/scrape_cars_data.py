@@ -1,7 +1,8 @@
 # Scrape data from back4app
 
 import json
-import requests
+
+import httpx
 import pandas as pd
 
 try:
@@ -14,13 +15,18 @@ try:
     while True:
         print(f"Running another {i}")
         url = f"https://parseapi.back4app.com/classes/Car_Model_List?skip={i}&limit=100"
-        data = json.loads(requests.get(url, headers=headers).content.decode("utf-8"))["results"]
+        data = json.loads(httpx.get(url, headers=headers).content.decode("utf-8"))[
+            "results"
+        ]
         if len(data) == 0:
             break
 
         df_new = pd.DataFrame({"Make": [], "Model": [], "Year": []})
         for car in data:
-            df_new = df_new._append({"Make": car["Make"], "Model": car["Model"], "Year": car["Year"]}, ignore_index=True)
+            df_new = df_new._append(
+                {"Make": car["Make"], "Model": car["Model"], "Year": car["Year"]},
+                ignore_index=True,
+            )
 
         df = pd.concat([df, df_new])
         i += 100

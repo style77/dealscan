@@ -1,8 +1,7 @@
 from django.db import models
-from djmoney.models.fields import MoneyField
-from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
-
+from django_countries.fields import CountryField
+from djmoney.models.fields import MoneyField
 from simple_history.models import HistoricalRecords
 
 

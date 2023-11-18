@@ -1,20 +1,22 @@
 import json
 import random
+from datetime import datetime, timedelta
 
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from datetime import datetime, timedelta
 
 def dashboard_callback(request, context):
     current_date = datetime.now()
-    WEEKS = [(current_date - timedelta(weeks=i)).strftime('%Y-%m-%d') for i in range(28)][::-1]
+    WEEKS = [
+        (current_date - timedelta(weeks=i)).strftime("%Y-%m-%d") for i in range(28)
+    ][::-1]
 
-    positive = [[1, random.randrange(8, 28)] for i in range(1, 28)]
-    negative = [[-1, -random.randrange(8, 28)] for i in range(1, 28)]
+    positive = [[1, random.randrange(8, 28)] for _ in range(1, 28)]
+    negative = [[-1, -random.randrange(8, 28)] for _ in range(1, 28)]
     average = [r[1] - random.randint(3, 5) for r in positive]
-    performance_positive = [[1, random.randrange(8, 28)] for i in range(1, 28)]
-    performance_negative = [[-1, -random.randrange(8, 28)] for i in range(1, 28)]
+    performance_positive = [[1, random.randrange(8, 28)] for _ in range(1, 28)]
+    performance_negative = [[-1, -random.randrange(8, 28)] for _ in range(1, 28)]
 
     context.update(
         {
