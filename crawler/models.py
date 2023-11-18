@@ -28,12 +28,15 @@ class Source(models.Model):
 
 
 class CarMake(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
 
 
 class CarModel(models.Model):
     make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
+
+    class Meta:
+        unique_together = ('make', 'name')
 
 
 class Offer(models.Model):
