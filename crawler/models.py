@@ -7,7 +7,9 @@ from simple_history.models import HistoricalRecords
 
 class Source(models.Model):
     # RSS feed to be crawled
-    name = models.CharField(_("name"), max_length=255, blank=True, null=True)
+    name = models.CharField(
+        _("name"), max_length=255, blank=True, null=True
+    )  # this is also going to be formatter name
     site_url = models.URLField(_("site url"), max_length=255, blank=True, null=True)
     feed_url = models.URLField(_("feed url"), max_length=512)
     image_url = models.URLField(_("image url"), max_length=1024, blank=True, null=True)
@@ -15,15 +17,16 @@ class Source(models.Model):
     description = models.CharField(_("description"), null=True, blank=True)
 
     last_polled = models.DateTimeField(_("last polled"), blank=True, null=True)
-    etag = models.CharField(_("etag"), max_length=255, blank=True, null=True)
 
     interval = models.PositiveIntegerField(
         _("interval"), default=500
     )  # interval in seconds
     active = models.BooleanField(_("active"), default=True)
-    status_code = models.PositiveIntegerField(_("status_code"), default=0)
 
     history = HistoricalRecords()
+
+    def __str__(self) -> str:
+        return self.name.capitalize()
 
 
 class CarMake(models.Model):
@@ -42,61 +45,6 @@ class CarModel(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
-
-class Offer(models.Model):
-    FUEL_CHOICES = (
-        ("diesel", _("Diesel")),
-        ("petrol", _("Petrol")),
-        ("hybrid", _("Hybrid")),
-        ("lpg", _("LPG")),
-        ("cng", _("CNG")),
-        ("electric", _("Electric")),
-        ("other", _("Other")),
-    )
-    TRANSMISSION_CHOICES = (("manual", _("Manual")), ("automatic", _("Automatic")))
-    BODY_CHOICES = (
-        ("suv", _("SUV")),
-        ("sedan", _("Sedan")),
-        ("minivan", _("Minivan")),
-        ("compact", _("Compact")),
-        ("combi", _("Combi")),
-        ("cabrio", _("Cabrio")),
-        ("coupe", _("Coupe")),
-        ("other", _("Other")),
-    )
-
-    id = models.SlugField(primary_key=True)
-    source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name="offers")
-
-    title = models.CharField(_("title"), max_length=1024)
-    url = models.URLField(_("url"), unique=True)
-    publication_date = models.DateTimeField(
-        _("publication_date"),
-    )
-
-    description = models.CharField(_("description"))
-
-    model = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="offers")
-    trim = models.CharField(_("trim"), blank=True, null=True)
-    generation = models.CharField(_("generation"), blank=True, null=True)
-
-    production_year = models.PositiveSmallIntegerField(_("production year"))
-    mileage = models.PositiveIntegerField(_("mileage"))
-    displacement = models.PositiveSmallIntegerField(_("engine displacement"))
-
-    fuel = models.CharField(_("fuel type"), choices=FUEL_CHOICES)
-    transmission = models.CharField(_("transmission"), choices=TRANSMISSION_CHOICES)
-    drive = models.CharField(_("drive"))
-    damaged = models.BooleanField(_("is vehicle damaged"))
-    body = models.CharField(_("body type"), choices=BODY_CHOICES)
-
-    price = MoneyField(
-        _("price"), max_digits=12, decimal_places=2, default_currency="PLN"
-    )
-
-    VIN = models.CharField(_("VIN number"), blank=True, null=True)
-    is_imported = models.BooleanField(_("is vehicle imported"))
 
 
 class OfferMetadata(models.Model):
@@ -126,7 +74,6 @@ class OfferMetadata(models.Model):
         ("pearl", _("Pearl")),
     ]
 
-    offer = models.OneToOneField(Offer, primary_key=True, on_delete=models.CASCADE)
     out_of_town_consumption = models.PositiveSmallIntegerField(
         _("out of town fuel consumption"), blank=True, null=True
     )
@@ -167,3 +114,59 @@ class OfferMetadata(models.Model):
     has_registration_number = models.BooleanField(
         _("does vehicle have registration number")
     )
+
+
+class Offer(models.Model):
+    FUEL_CHOICES = (
+        ("diesel", _("Diesel")),
+        ("petrol", _("Petrol")),
+        ("hybrid", _("Hybrid")),
+        ("lpg", _("LPG")),
+        ("cng", _("CNG")),
+        ("electric", _("Electric")),
+        ("other", _("Other")),
+    )
+    TRANSMISSION_CHOICES = (("manual", _("Manual")), ("automatic", _("Automatic")))
+    BODY_CHOICES = (
+        ("suv", _("SUV")),
+        ("sedan", _("Sedan")),
+        ("minivan", _("Minivan")),
+        ("compact", _("Compact")),
+        ("combi", _("Combi")),
+        ("cabrio", _("Cabrio")),
+        ("coupe", _("Coupe")),
+        ("other", _("Other")),
+    )
+
+    id = models.SlugField(primary_key=True)
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name="offers")
+    metadata = models.OneToOneField(OfferMetadata, on_delete=models.CASCADE)
+
+    title = models.CharField(_("title"), max_length=1024)
+    url = models.URLField(_("url"), unique=True)
+    publication_date = models.DateTimeField(
+        _("publication_date"),
+    )
+
+    description = models.CharField(_("description"))
+
+    model = models.ForeignKey(CarModel, on_delete=models.CASCADE, related_name="offers")
+    trim = models.CharField(_("trim"), blank=True, null=True)
+    generation = models.CharField(_("generation"), blank=True, null=True)
+
+    production_year = models.PositiveSmallIntegerField(_("production year"))
+    mileage = models.PositiveIntegerField(_("mileage"))
+    displacement = models.PositiveSmallIntegerField(_("engine displacement"))
+
+    fuel = models.CharField(_("fuel type"), choices=FUEL_CHOICES)
+    transmission = models.CharField(_("transmission"), choices=TRANSMISSION_CHOICES)
+    drive = models.CharField(_("drive"))
+    damaged = models.BooleanField(_("is vehicle damaged"))
+    body = models.CharField(_("body type"), choices=BODY_CHOICES)
+
+    price = MoneyField(
+        _("price"), max_digits=12, decimal_places=2, default_currency="PLN"
+    )
+
+    VIN = models.CharField(_("VIN number"), blank=True, null=True)
+    is_imported = models.BooleanField(_("is vehicle imported"))
