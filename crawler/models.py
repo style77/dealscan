@@ -34,7 +34,6 @@ class CarMake(models.Model):
 class CarModel(models.Model):
     make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    generation = models.CharField(max_length=255)
 
 
 class Offer(models.Model):
@@ -62,17 +61,17 @@ class Offer(models.Model):
     id = models.SlugField(primary_key=True)
     source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name="offers")
 
-    title = models.CharField(max_length=1024)
-    url = models.URLField(unique=True)
-    publication_date = models.DateTimeField()
+    title = models.CharField(_("title"), max_length=1024)
+    url = models.URLField(_("url"), unique=True)
+    publication_date = models.DateTimeField(_("publication_date"), )
 
     description = models.CharField(_("description"))
 
     model = models.ForeignKey(
-        _("model"), CarModel, on_delete=models.SET_NULL, related_name="offers"
+        CarModel, on_delete=models.CASCADE, related_name="offers"
     )
-    version = models.CharField(blank=True, null=True)
-    generation = models.CharField(blank=True, null=True)
+    trim = models.CharField(_("trim"), blank=True, null=True)
+    generation = models.CharField(_("generation"), blank=True, null=True)
 
     production_year = models.PositiveSmallIntegerField(_("production year"))
     mileage = models.PositiveIntegerField(_("mileage"))
@@ -119,7 +118,7 @@ class OfferMetadata(models.Model):
         ("pearl", _("Pearl")),
     ]
 
-    offer = models.ForeignKey(Offer, primary_key=True, on_delete=models.CASCADE)
+    offer = models.OneToOneField(Offer, primary_key=True, on_delete=models.CASCADE)
     out_of_town_consumption = models.PositiveSmallIntegerField(
         _("out of town fuel consumption"), blank=True, null=True
     )
