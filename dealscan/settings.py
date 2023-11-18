@@ -42,14 +42,14 @@ DEFAULT_APPS = [
     "django.contrib.staticfiles",
 ]
 
-CORE_APPS = ["accounts", "billing"]
+CORE_APPS = ["accounts", "billing", "crawler"]
 
 THIRD_PARTY_APPS = [
     "simple_history",
     "guardian",
     "django_celery_beat",
     "djmoney",  # MoneyField
-    "django-countries",  # CountryField
+    "django_countries",  # CountryField
 ]
 
 INSTALLED_APPS = UNFOLD_APPS + DEFAULT_APPS + CORE_APPS + THIRD_PARTY_APPS
@@ -228,6 +228,7 @@ UNFOLD = {
                 ],
             },
             {
+                "title": _("Authorization"),
                 "separator": True,
                 "items": [
                     {
@@ -239,6 +240,28 @@ UNFOLD = {
                         "title": _("Groups"),
                         "icon": "group",
                         "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Feeds"),
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Source"),
+                        "icon": "feed",
+                        "link": reverse_lazy("admin:crawler_source_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": _("Offers"),
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Offer"),
+                        "icon": "article",
+                        "link": reverse_lazy("admin:crawler_offer_changelist"),
                     },
                 ],
             },
