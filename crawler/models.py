@@ -5,10 +5,10 @@ from djmoney.models.fields import MoneyField
 from simple_history.models import HistoricalRecords
 
 
-class Source(models.Model):
+class Source(models.Model):  # type: ignore[django-manager-missing]
     # RSS feed to be crawled
     name = models.CharField(
-        _("name"), max_length=255, blank=True, null=True
+        _("name"), max_length=255
     )  # this is also going to be formatter name
     site_url = models.URLField(_("site url"), max_length=255, blank=True, null=True)
     feed_url = models.URLField(_("feed url"), max_length=512)
@@ -36,7 +36,7 @@ class CarMake(models.Model):
         return self.name
 
 
-class CarModel(models.Model):
+class CarModel(models.Model):  # type: ignore[django-manager-missing]
     make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
@@ -74,11 +74,11 @@ class OfferMetadata(models.Model):
         ("pearl", _("Pearl")),
     ]
 
-    out_of_town_consumption = models.PositiveSmallIntegerField(
-        _("out of town fuel consumption"), blank=True, null=True
+    out_of_town_consumption = models.DecimalField(
+        _("out of town fuel consumption"), decimal_places=1, max_digits=3, blank=True, null=True
     )
-    in_town_consumption = models.PositiveSmallIntegerField(
-        _("in town fuel consumption"), blank=True, null=True
+    in_town_consumption = models.DecimalField(
+        _("in town fuel consumption"), decimal_places=1, max_digits=3, blank=True, null=True
     )
 
     power = models.PositiveSmallIntegerField(_("engine power"))
@@ -86,12 +86,16 @@ class OfferMetadata(models.Model):
         _("co2 emission"), blank=True, null=True
     )
     doors_count = models.PositiveSmallIntegerField(_("doors count"))
-    seats_count = models.PositiveSmallIntegerField(_("seats count"))
+    seats_count = models.PositiveSmallIntegerField(
+        _("seats count"), blank=True, null=True
+    )
 
     color = models.CharField(_("vehicle color"), choices=COLOR_CHOICES)
-    color_type = models.CharField(_("vehicle color type"), choices=FINISH_CHOICES)
+    color_type = models.CharField(
+        _("vehicle color type"), choices=FINISH_CHOICES, null=True, blank=True
+    )
 
-    origin_country = CountryField(_("origin country"))
+    origin_country = CountryField(_("origin country"), null=True, blank=True)
 
     first_registration_date = models.DateTimeField(
         _("first registration date"), blank=True, null=True
@@ -99,24 +103,20 @@ class OfferMetadata(models.Model):
     registration_number = models.CharField(
         _("registration number"), max_length=7, blank=True, null=True
     )
-    first_owner = models.BooleanField(_("first owner"))
+    first_owner = models.BooleanField(_("first owner"), null=True, blank=True)
 
-    never_damaged = models.BooleanField(_("have vehicle been ever damaged"))
+    never_damaged = models.BooleanField(
+        _("have vehicle been ever damaged"), null=True, blank=True
+    )
 
     features = models.JSONField(_("car features"))
 
-    radio = models.BooleanField(_("does vehicle have radio"))
     left_steering_wheel = models.BooleanField(
-        _("does vehicle have steering wheel on the left side")
-    )
-
-    from_authorized_dealer = models.BooleanField(_("is vehicle from authorized dealer"))
-    has_registration_number = models.BooleanField(
-        _("does vehicle have registration number")
+        _("does vehicle have steering wheel on the left side"), null=True, blank=True
     )
 
 
-class Offer(models.Model):
+class Offer(models.Model):  # type: ignore[django-manager-missing]
     FUEL_CHOICES = (
         ("diesel", _("Diesel")),
         ("petrol", _("Petrol")),
@@ -144,6 +144,7 @@ class Offer(models.Model):
 
     title = models.CharField(_("title"), max_length=1024)
     url = models.URLField(_("url"), unique=True)
+    image_url = models.URLField(_("image_url"), unique=True, null=True, blank=True)
     publication_date = models.DateTimeField(
         _("publication_date"),
     )
@@ -160,8 +161,8 @@ class Offer(models.Model):
 
     fuel = models.CharField(_("fuel type"), choices=FUEL_CHOICES)
     transmission = models.CharField(_("transmission"), choices=TRANSMISSION_CHOICES)
-    drive = models.CharField(_("drive"))
-    damaged = models.BooleanField(_("is vehicle damaged"))
+    drive = models.CharField(_("drive"), null=True, blank=True)
+    damaged = models.BooleanField(_("is vehicle damaged"), blank=True, null=True)
     body = models.CharField(_("body type"), choices=BODY_CHOICES)
 
     price = MoneyField(
