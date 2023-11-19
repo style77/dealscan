@@ -23,7 +23,7 @@ class Command(BaseCommand):
                     name=row["Make"].capitalize()
                 )
                 if created:
-                    self.stdout.write(self.style.SUCCESS(f'Added "{make.name}" make'))
+                    self.stdout.write(f'Added "{make.name}" make', self.style.SUCCESS)
                 model = CarModel(make=make, name=row["Model"])
                 models.append(model)
 
@@ -32,7 +32,6 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(
-            self.style.SUCCESS(
-                f"Inserted {len(inserted_models)}/{len(models)} models to database in {round(time.time() - start_time, 2)}s"
-            )
+            f"Inserted {len(inserted_models)}/{len(models)} models to database in {round(time.time() - start_time, 2)}s",
+            self.style.SUCCESS,
         )
