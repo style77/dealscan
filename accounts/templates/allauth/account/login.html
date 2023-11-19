@@ -1,0 +1,77 @@
+{% extends 'layouts/simple_base.html' %}
+{% load i18n %}
+{% load allauth account socialaccount %}
+{% block head_title %}
+  {% trans 'Dealscan.io - Sign In' %}
+{% endblock %}
+{% block content %}
+  <div class="w-full min-h-screen max-h-screen bg-white justify-start items-center inline-flex">
+    <div class="grow shrink self-stretch flex-col justify-start items-center inline-flex">
+      <div class="self-stretch grow shrink basis-0 px-8 flex-col justify-center items-center flex">
+        <div class="self-stretch flex-col justify-start items-center gap-8 flex">
+          <div class="self-stretch flex-col justify-start items-center gap-6 flex">
+            <img src="" alt="logo" class="w-12 h-12" />
+            <div class="self-stretch flex-col justify-start items-start gap-3 flex">
+              <div class="self-stretch text-center text-gray-900 text-3xl font-semibold font-sans leading-[38px]">
+                {% trans 'Welcome back' %}
+              </div>
+              <div class="self-stretch text-center text-slate-600 text-base font-normal font-sans leading-normal">
+                {% trans 'Please enter your details.' %}
+              </div>
+            </div>
+          </div>
+          {% url 'account_login' as login_url %}
+          {% url 'account_reset_password' as password_reset_url %}
+          <form action="{{ login_url }}" method="post" class="lg:w-1/2 w-full flex-grow">
+            <div class="self-stretch rounded-xl flex-col justify-start items-center gap-6 flex">
+              {% csrf_token %}
+              {% if form.non_field_errors %}
+                <ul>
+                  {% for error in form.non_field_errors %}
+                    <li class="text-red-500 text-sm">{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+              <div class="self-stretch h-40 flex-col justify-start items-start gap-5 flex">
+                <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">{{ form.login.label_tag }}
+                  {{ form.login }}</div>
+                <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">{{ form.password.label_tag }}
+                  {{ form.password }}</div>
+              </div>
+              {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+              {% endif %}
+            </div>
+            <div class="self-stretch flex-col justify-start items-start gap-4 flex">
+              <div class="self-stretch justify-start items-center inline-flex mt-6">
+                <div class="grow shrink basis-0 h-5 justify-start items-start gap-2 flex accent-green-500">
+                    {{ form.remember }}
+                  <div class="text-green-700 text-sm font-semibold font-sans leading-tight">
+                    <a href="{{ password_reset_url }}" class="w-[114px] self-stretch justify-center items-center gap-1.5 flex">{% trans 'Forgot password' %}</a>
+                  </div>
+                </div>
+              </div>
+              <button class="self-stretch px-4 py-2.5 bg-green-500 rounded-lg shadow border border-green-500 justify-center items-center gap-1.5 inline-flex text-white text-base font-semibold font-sans leading-normal" type="submit">{% trans 'Sign in' %}</button>
+            </div>
+          </form>
+          <div class="self-stretch justify-center items-baseline gap-1 inline-flex">
+            <div class="text-slate-600 text-sm font-normal font-sans leading-tight">
+              {% trans 'Don’t have an account?' %}
+            </div>
+            <a class="justify-center items-center gap-1.5 flex" href="{{ signup_url }}">
+              <div class="text-green-700 text-sm font-semibold font-sans leading-tight">
+                {% trans 'Sign up' %}
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="self-stretch h-24 p-8 justify-start items-end inline-flex">
+        <div class="text-slate-600 text-sm font-normal font-sans leading-tight">
+          © Dealscan&nbsp;{% now 'Y' %}
+        </div>
+      </div>
+    </div>
+    <img class="grow shrink basis-0 object-cover self-stretch hidden xl:block" src="https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcm0yMThiYXRjaDUta2F0aWUtMTIuanBn.jpg" />
+  </div>
+{% endblock %}
