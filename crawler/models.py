@@ -101,7 +101,7 @@ class OfferMetadata(models.Model):
         _("first registration date"), blank=True, null=True
     )
     registration_number = models.CharField(
-        _("registration number"), max_length=7, blank=True, null=True
+        _("registration number"), max_length=12, blank=True, null=True
     )
     first_owner = models.BooleanField(_("first owner"), null=True, blank=True)
 
