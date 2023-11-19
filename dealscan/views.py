@@ -5,6 +5,38 @@ from datetime import datetime, timedelta
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+
+User = get_user_model()
+
+
+def get_created_accounts_percentage() -> float:
+    today = timezone.now()
+    start_of_week = today - timedelta(days=today.weekday())
+    end_of_week = start_of_week + timedelta(days=6)
+
+    users_created_this_week = User.objects.filter(
+        date_joined__range=[start_of_week, end_of_week]
+    ).count()
+    total_users_created = User.objects.filter(date_joined__lt=today).count()
+
+    if total_users_created != 0:
+        percentage_difference = (
+            (users_created_this_week - total_users_created) / total_users_created
+        ) * 100
+    else:
+        percentage_difference = 0
+
+    return percentage_difference
+
+
+def get_formatted_sign(val: float) -> str:
+    if val >= 0:
+        return "+"
+    else:
+        return ""  # since negative values got minus before value itself
+
 
 def dashboard_callback(request, context):
     current_date = datetime.now()
@@ -17,6 +49,9 @@ def dashboard_callback(request, context):
     average = [r[1] - random.randint(3, 5) for r in positive]
     performance_positive = [[1, random.randrange(8, 28)] for _ in range(1, 28)]
     performance_negative = [[-1, -random.randrange(8, 28)] for _ in range(1, 28)]
+
+    users_percentage = get_created_accounts_percentage()
+    users_percentage_sign = get_formatted_sign(users_percentage)
 
     context.update(
         {
@@ -34,10 +69,10 @@ def dashboard_callback(request, context):
             ],
             "kpi": [
                 {
-                    "title": "Product A Performance",
-                    "metric": "$1,234.56",
+                    "title": "Created Accounts",
+                    "metric": User.objects.count(),
                     "footer": mark_safe(
-                        '<strong class="text-green-600 font-medium">+3.14%</strong>&nbsp;progress from last week'
+                        f'<strong class="{"text-green-600 font-medium" if users_percentage >= 0 else "text-red-600 font-medium"}">{users_percentage_sign}{users_percentage:.2f}%</strong>&nbsp;progress from last week'
                     ),
                     "chart": json.dumps(
                         {
