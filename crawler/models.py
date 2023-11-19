@@ -109,7 +109,7 @@ class OfferMetadata(models.Model):
         _("have vehicle been ever damaged"), null=True, blank=True
     )
 
-    features = models.JSONField(_("car features"))
+    features = models.JSONField(_("car features"), null=True, blank=True)
 
     left_steering_wheel = models.BooleanField(
         _("does vehicle have steering wheel on the left side"), null=True, blank=True
