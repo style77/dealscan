@@ -39,7 +39,11 @@ DEFAULT_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
+    "compressor",
 ]
+
+AUTH_APPS = ["allauth", "allauth.account", "allauth.socialaccount"]
 
 CORE_APPS = ["accounts", "billing", "crawler"]
 
@@ -51,8 +55,13 @@ THIRD_PARTY_APPS = [
     "django_countries",  # CountryField
 ]
 
-INSTALLED_APPS = UNFOLD_APPS + DEFAULT_APPS + CORE_APPS + THIRD_PARTY_APPS
+DEV_APPS = [
+    "django_browser_reload"
+]
 
+INSTALLED_APPS = UNFOLD_APPS + DEFAULT_APPS + AUTH_APPS + CORE_APPS + THIRD_PARTY_APPS
+if DEBUG:
+    INSTALLED_APPS += DEV_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -62,8 +71,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
 
 ROOT_URLCONF = "dealscan.urls"
 
@@ -71,7 +84,10 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.normpath(os.path.join(BASE_DIR, "dealscan/templates")),
+            os.path.normpath(os.path.join(BASE_DIR, "dealscan", "templates")),
+            os.path.normpath(
+                os.path.join(BASE_DIR, "accounts", "templates", "allauth", "account")
+            ),
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -118,9 +134,20 @@ AUTH_USER_MODEL = "accounts.User"
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
     "guardian.backends.ObjectPermissionBackend",
 )
 
+SITE_ID = 1
+LOGIN_REDIRECT_URL = "/dashboard"
+EMAIL_BACKEND = (
+    "django.core.mail.backends.console.EmailBackend"
+    if DEBUG
+    else "django.core.mail.backends.console.EmailBackend"
+)  # TODO move to SES
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'none' if DEBUG else 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -149,6 +176,11 @@ CELERY_REDBEAT_URL = os.getenv("REDBEAT_REDIS_URL", REDIS_URL)
 
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 
+# Stripe
+
+STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -165,15 +197,24 @@ USE_TZ = True
 
 # Static
 
+STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [BASE_DIR / "dealscan" / "static"]
+STATICFILES_DIRS = [
+    BASE_DIR / "accounts" / "static",
+    BASE_DIR / "dealscan" / "static",
+]
 
-STATIC_ROOT = BASE_DIR / "static"
 
 MEDIA_ROOT = BASE_DIR / "media"
 
 MEDIA_URL = "/media/"
+
+COMPRESS_ROOT = BASE_DIR / 'static'
+
+COMPRESS_ENABLED = True
+
+STATICFILES_FINDERS = ('compressor.finders.CompressorFinder', 'django.contrib.staticfiles.finders.FileSystemFinder', 'django.contrib.staticfiles.finders.AppDirectoriesFinder',)
 
 # STORAGES = {
 #     "default": {
