@@ -2,17 +2,16 @@ from django.contrib import admin
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
 
-
 from crawler.models import CarMake, CarModel, Offer, OfferMetadata, Source
 from dealscan.sites import unfold_admin_site
 
 
 @admin.register(Source, site=unfold_admin_site)
 class SourceAdmin(ModelAdmin):
-
     def image_tag(self, obj: Source):
         return format_html('<img src="{}" />'.format(obj.image_url))
-    image_tag.short_description = ""
+
+    image_tag.short_description = ""  # type: ignore
 
     list_display = ["image_tag", "name", "description", "last_polled", "active"]
 

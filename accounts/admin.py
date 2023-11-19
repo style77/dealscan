@@ -1,5 +1,3 @@
-from typing import Type
-
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -21,9 +19,9 @@ class GroupAdmin(BaseGroupAdmin, ModelAdmin):
 @admin.register(User, site=unfold_admin_site)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
-    add_form: Type[User] = UserCreationForm
+    add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
-    model: Type[User] = User
+    model = User  # type: ignore[assignment]
     list_display = ["email", "username", "date_joined", "is_staff"]
     search_fields = ("email", "username", "first_name", "last_name")
     ordering = ("date_joined",)
