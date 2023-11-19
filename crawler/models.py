@@ -138,7 +138,7 @@ class Offer(models.Model):  # type: ignore[django-manager-missing]
         ("other", _("Other")),
     )
 
-    id = models.SlugField(primary_key=True)
+    id = models.SlugField(primary_key=True, max_length=512)
     source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name="offers")
     metadata = models.OneToOneField(OfferMetadata, on_delete=models.CASCADE)
 
