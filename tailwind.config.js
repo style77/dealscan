@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-      './templates/**/*.html',
       './accounts/templates/**/*.html'
   ],
   theme: {
@@ -12,5 +11,9 @@ module.exports = {
       }
     },
   },
+  safelist: [
+    'px-3.5',
+
+  ],
   plugins: [],
 }
