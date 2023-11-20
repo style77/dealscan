@@ -26,7 +26,7 @@ collectstatic:
 
 tailwind-watcher:
 	@echo Running watcher...
-	npx tailwindcss -i ./accounts/static/src/input.css -o ./accounts/static/src/output.css --watch
+	npx tailwindcss -i ./accounts/static/src/input.css -o ./static/src/output.css --watch
 
 # Lint
 
