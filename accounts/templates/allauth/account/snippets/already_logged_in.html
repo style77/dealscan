@@ -1,0 +1,15 @@
+{% load i18n %}
+{% load account %}
+{% load allauth %}
+{% user_display user as user_display %}
+
+<div class="p-6 absolute">
+    <div class="pl-1 pr-2.5 py-1 bg-emerald-50 rounded-full border border-emerald-200 justify-start items-center gap-2 inline-flex">
+        <div class="px-2 py-0.5 bg-white rounded-full border border-emerald-200 justify-start items-center flex">
+            <div class="text-center text-green-700 text-xs font-medium font-sans leading-[18px]">{% trans "Note" %}</div>
+        </div>
+        <div class="justify-start items-center gap-1 flex px-2">
+            <div class="text-green-700 text-xs font-medium font-sans leading-[18px]">{% trans "You are already logged in as" %}&nbsp;<b>{{ user_display }}</b></div>
+        </div>
+    </div>
+</div>
