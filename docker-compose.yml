@@ -62,7 +62,7 @@ services:
     image: dealscan-migrations:latest
     container_name: dealscan-migrations
     restart: no
-    command: poetry run python manage.py migrate
+    command: poetry run python manage.py migrate --noinput
     env_file:
       - .env
     volumes:
@@ -76,7 +76,9 @@ services:
       dockerfile: Dockerfile
     image: dealscan-celery:latest
     container_name: dealscan-celery
-    command: celery -A . worker -Q default -n dealscan.%%h --loglevel=INFO --max-memory-per-child=512000 --concurrency=1
+    command: poetry run celery -A dealscan worker -Q default -n dealscan.%%h --loglevel=INFO --max-memory-per-child=512000 --concurrency=1
+    env_file:
+      - .env
     volumes:
       - .:/usr/src/app
     depends_on:
@@ -84,24 +86,20 @@ services:
         condition: service_healthy
       dealscan-redis:
         condition: service_healthy
-    links:
-      - dealscan
-      - dealscan-redis
 
   dealscan-celery-beat:
       build:
         dockerfile: Dockerfile
       image: dealscan-celery-beat:latest
       container_name: dealscan-celery-beat
-      command: celery -A . beat -S redbeat.RedBeatScheduler --loglevel=DEBUG --pidfile /tmp/dealscan-celerybeat.pid
+      command: poetry run celery -A dealscan beat -S redbeat.RedBeatScheduler --loglevel=DEBUG --pidfile /tmp/dealscan-celerybeat.pid
+      env_file:
+      - .env
       volumes:
         - .:/usr/src/app
       depends_on:
         - dealscan
-        - dealscan-db
-        - dealscan-redis
-      links:
-        - dealscan
+        - dealscan-celery
         - dealscan-db
         - dealscan-redis
 
@@ -109,7 +107,9 @@ services:
       build:
         dockerfile: Dockerfile
       container_name: dealscan-celery-flower
-      command: celery -A . flower --loglevel=INFO --port=9090 --broker=redis://dealscan-redis:6379/0 --basic_auth=dealscan:dealscan
+      command: poetry run celery -A dealscan flower --loglevel=INFO --port=9090 --broker=redis://dealscan-redis:6379/0 --basic_auth=dealscan:dealscan
+      env_file:
+      - .env
       ports:
         - "127.0.0.1:9090:9090"
       restart: unless-stopped
@@ -117,9 +117,5 @@ services:
         - .:/usr/src/app
       depends_on:
         - dealscan
-        - dealscan-db
-        - dealscan-redis
-      links:
-        - dealscan
-        - dealscan-db
+        - dealscan-celery
         - dealscan-redis
