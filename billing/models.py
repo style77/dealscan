@@ -9,3 +9,4 @@ class StripeUser(models.Model):
         User, primary_key=True, on_delete=models.CASCADE, related_name="stripe_user"
     )
     customer_id = models.CharField(max_length=128, null=False)
+    subscription_id = models.CharField(max_length=255, null=True)
