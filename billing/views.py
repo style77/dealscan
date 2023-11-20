@@ -59,8 +59,8 @@ def create_checkout_session(request):
         try:
             checkout_session = stripe.checkout.Session.create(
                 client_reference_id=request.user.id,
-                success_url=domain_url + "success?session_id={CHECKOUT_SESSION_ID}",
-                cancel_url=domain_url + "cancel/",
+                success_url=domain_url + request.GET.get("success_url", "success?session_id={CHECKOUT_SESSION_ID}"),
+                cancel_url=domain_url + request.GET.get("cancel_url", "cancel/"),
                 payment_method_types=["card"],
                 mode="subscription",
                 line_items=[
