@@ -5,10 +5,16 @@ from datetime import datetime, timedelta
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from django.views.generic import TemplateView
+
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 User = get_user_model()
+
+
+class IndexView(TemplateView):
+    template_name = "index/index.html"
 
 
 def get_created_accounts_percentage() -> float:

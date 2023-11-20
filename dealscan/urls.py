@@ -3,8 +3,10 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 from .sites import unfold_admin_site
+from .views import IndexView
 
 urlpatterns = [
+    path("", IndexView.as_view()),
     path("admin/", unfold_admin_site.urls),
     path("accounts/", include("accounts.urls")),
     path("subscriptions/", include("billing.urls")),
