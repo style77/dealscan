@@ -2,11 +2,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 
-from .sites import unfold_admin_site
-from .views import IndexView
+from dealscan.sites import unfold_admin_site
+from dealscan.views import IndexView, PricingView
 
 urlpatterns = [
-    path("", IndexView.as_view()),
+    path("", IndexView.as_view(), name="index"),
+    path("pricing/", PricingView.as_view(), name="pricing"),
     path("admin/", unfold_admin_site.urls),
     path("accounts/", include("accounts.urls")),
     path("subscriptions/", include("billing.urls")),
