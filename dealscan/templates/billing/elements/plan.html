@@ -1,5 +1,48 @@
 {% load i18n %}
 
+{% url "checkout" as checkout_url %}
+{% url 'config' as config_url %}
+<script>
+  async function getStripePublicKey() {
+    const response = await fetch(`{{ config_url }}`);
+    return (await response.json()).publicKey;
+  }
+
+  function redirectToCheckoutWithStripe(publicKey, sessionId) {
+    const stripe = Stripe(publicKey);
+    if (sessionId) {
+      stripe.redirectToCheckout({ sessionId: sessionId })
+        .then(function(result) {
+          if (result.error) {
+            console.error(result.error.message);
+          }
+        });
+    }
+  }
+
+  function handleCheckout(year_plan) {
+    fetch(`{{ checkout_url }}?recurring=${year_plan ? 'year' : 'month'}&cancel_url=pricing?cancelled`)
+      .then(function(response) {
+        if (response.redirected) {
+          window.location.href = response.url;
+          return;
+        }
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Response is not JSON');
+        }
+        return response.json();
+      })
+      .then(function(data) {
+        return getStripePublicKey().then(publicKey => {
+          redirectToCheckoutWithStripe(publicKey, data.sessionId);
+        });
+      })
+      .catch(function(error) {
+        alert('Something went wrong: ' + error.message);
+      });
+  }
+</script>
 <div x-data="{plans: null, async fetchPlans() {
   try {
       const response = await fetch('{{ plans_url }}');
@@ -31,10 +74,10 @@
       <div class="self-stretch h-64 px-8 pt-8 pb-10 gap-6 flex flex-col justify-start items-start">
         <div class="self-stretch gap-4 flex flex-col justify-start items-start">
           <template x-for="feature in plan.features">
-            <div class="self-stretch gap-3 flex items-start">
+            <div class="self-stretch gap-3 flex items-start text-slate-600" x-text="feature.name">
               <div class="w-6 h-6 relative bg-green-50 rounded-full"></div>
               <div class="flex-grow flex-shrink-0 flex-basis-0 flex-col justify-start items-start">
-                <div class="self-stretch text-slate-600 text-base font-normal font-sans leading-normal" x-text="feature.name" ></div>
+                <div class="self-stretch text-slate-600 text-base font-normal font-sans leading-normal truncate"></div>
               </div>
             </div>
           </template>
@@ -42,14 +85,8 @@
       </div>
       <div class="self-stretch h-28 p-8 bg-gray-50 border-t border-gray-200 flex flex-col justify-start items-start gap-6">
         <div class="self-stretch h-12 flex flex-col justify-start items-start gap-3" x-data="{sessionId: null}">
-          {% url "checkout" as checkout_url %}
           <button
-            x-on:click="(async () => {
-              const response = await fetch(`{{ checkout_url }}?recurring=${year_plan}`)
-              if (!response.ok) alert('Something went wrong')
-              { sessionId } = await response.json()
-              redirectToCheckout(sessionId)
-          })"
+            x-on:click="handleCheckout(year_plan)"
             class="self-stretch px-[18px] py-3 bg-green-500 hover:bg-green-400 rounded-lg shadow border border-green-500 hover:border-green-400 transition flex justify-center items-center gap-1.5">
             <div class="px-0.5 flex justify-center items-center">
               <div class="text-white text-base font-semibold font-sans leading-normal">{% trans "Get started" %}</div>
