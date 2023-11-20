@@ -195,6 +195,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = (BASE_DIR / 'locale/', )
+
 # Static
 
 STATIC_ROOT = BASE_DIR / "static"
