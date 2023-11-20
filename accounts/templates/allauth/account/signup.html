@@ -1,0 +1,90 @@
+{% extends 'layouts/simple_base.html' %}
+{% load i18n %}
+{% load allauth account socialaccount %}
+{% block head_title %}
+  {% trans 'Dealscan.io - Sign In' %}
+{% endblock %}
+{% block content %}
+  <div class="w-full min-h-screen max-h-screen bg-white justify-start items-start inline-flex">
+    <div class="grow shrink basis-0 self-stretch flex-col justify-center items-center inline-flex">
+      <div class="self-stretch px-8 flex-col justify-start items-center flex">
+        <div class="self-stretch flex-col justify-start items-center gap-8 flex">
+          <div class="self-stretch flex-col justify-start items-start gap-3 flex">
+            <div class="self-stretch text-gray-900 text-3xl font-semibold font-sans leading-[38px]">
+              {% trans 'Sign up' %}
+            </div>
+            <div class="self-stretch text-slate-600 text-base font-normal font-sans leading-normal">
+              {% trans 'Start your 30-day free trial.' %}
+            </div>
+          </div>
+          {% url 'account_signup' as signup_url %}
+          <form action="{{ signup_url }}" method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+              <ul>
+                {% for error in form.non_field_errors %}
+                  <li class="text-red-500 text-sm">{{ error }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+            <div class="self-stretch rounded-xl flex-col justify-start items-center gap-6 flex">
+              <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+                <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">
+                  <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">
+                    <div class="text-slate-700 text-sm font-medium font-sans leading-tight">{{ form.username.label }}*</div>
+                    {{ form.username }}
+                  </div>
+                </div>
+                <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">
+                  <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">
+                    <div class="text-slate-700 text-sm font-medium font-sans leading-tight">{{ form.email.label }}*</div>
+                    {{ form.email }}
+                  </div>
+                </div>
+                <div class="self-stretch h-[90px] flex-col justify-start items-start gap-1.5 flex">
+                  <div class="self-stretch h-[90px] flex-col justify-start items-start gap-1.5 flex">
+                    <div class="text-slate-700 text-sm font-medium font-sans leading-tight">{{ form.password1.label }}*</div>
+                    {{ form.password1 }}
+                  </div>
+                  <div class="self-stretch text-slate-600 text-sm font-normal font-sans leading-tight">{{ form.password1.help_text }}</div>
+                </div>
+                <div class="self-stretch h-[90px] flex-col justify-start items-start gap-1.5 flex">
+                  <div class="self-stretch h-[90px] flex-col justify-start items-start gap-1.5 flex">
+                    <div class="text-slate-700 text-sm font-medium font-sans leading-tight">{{ form.password2.label }}*</div>
+                    {{ form.password2 }}
+                  </div>
+                </div>
+              </div>
+              <div class="self-stretch flex-col justify-start items-start gap-4 flex">
+                <button type="submit" class="self-stretch px-4 py-2.5 bg-green-500 rounded-lg shadow border border-green-500 justify-center items-center gap-1.5 inline-flex">
+                  <div class="px-0.5 justify-center items-center flex">
+                    <div class="text-white text-base font-semibold font-sans leading-normal">
+                      {% trans 'Get started' %}
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </form>
+          <div class="self-stretch justify-center items-start gap-1 inline-flex">
+            <div class="text-slate-600 text-sm font-normal font-sans leading-tight">
+              {% trans 'Already have an account?' %}
+            </div>
+            {% url 'account_login' as login_url %}
+            <a href="{{ login_url }}" class="justify-center items-center gap-1.5 flex">
+              <div class="text-green-700 text-sm font-semibold font-sans leading-tight">
+                {% trans 'Log in' %}
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="self-stretch inline-flex h-24 p-8 justify-between items-end">
+        <div class="text-slate-600 text-sm font-normal font-sans leading-tight">
+          © Dealscan&nbsp;{% now 'Y' %}
+        </div>
+      </div>
+    </div>
+    <img class="grow shrink basis-0 object-cover self-stretch hidden xl:block" src="https://images.rawpixel.com/image_800/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcm0yMThiYXRjaDUta2F0aWUtMTIuanBn.jpg" />
+  </div>
+{% endblock %}
