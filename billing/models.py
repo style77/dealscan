@@ -16,6 +16,6 @@ class StripeUser(models.Model):
 
 
 @receiver(post_save, sender=User, dispatch_uid="create_stripe_customer")
-def create_stripe_customer(sender, instance: User, **kwargs):
+def create_stripe_customer(sender, instance, **kwargs):
     customer = stripe.Customer.create(email=instance.email)
     StripeUser.objects.create(user=instance, customer_id=customer.id)

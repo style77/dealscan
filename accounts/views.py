@@ -1,14 +1,13 @@
-from typing import Any, Dict
 from allauth.account.views import (
-    SignupView,
     LoginView,
-    PasswordResetView,
     PasswordResetDoneView,
+    PasswordResetView,
+    SignupView,
 )
+from allauth.core import ratelimit
 from django.urls import reverse_lazy
 
 from accounts.forms import CustomLoginForm, CustomResetPasswordForm, CustomSignupForm
-from allauth.core import ratelimit
 
 
 class MySignupView(SignupView):

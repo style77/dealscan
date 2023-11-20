@@ -2,13 +2,11 @@ import json
 import random
 from datetime import datetime, timedelta
 
-from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _
-
-from django.views.generic import TemplateView
-
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import TemplateView
 
 User = get_user_model()
 
@@ -30,10 +28,13 @@ def get_created_accounts_percentage() -> float:
     users_created_last_week = User.objects.filter(
         date_joined__range=[start_of_week, today]
     ).count()
-    users_created_prev_week = User.objects.filter(date_joined__range=[prev_start_of_week, start_of_week]).count()
+    users_created_prev_week = User.objects.filter(
+        date_joined__range=[prev_start_of_week, start_of_week]
+    ).count()
 
     percentage_difference = (
-        (users_created_last_week - users_created_prev_week) / (users_created_last_week + users_created_prev_week)
+        (users_created_last_week - users_created_prev_week)
+        / (users_created_last_week + users_created_prev_week)
     ) * 100
 
     return percentage_difference

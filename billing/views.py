@@ -1,10 +1,9 @@
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from django.http.response import JsonResponse
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
-
 import stripe
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.http.response import JsonResponse
+from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_exempt
 
 
 @csrf_exempt
@@ -59,7 +58,10 @@ def create_checkout_session(request):
         try:
             checkout_session = stripe.checkout.Session.create(
                 client_reference_id=request.user.id,
-                success_url=domain_url + request.GET.get("success_url", "success?session_id={CHECKOUT_SESSION_ID}"),
+                success_url=domain_url
+                + request.GET.get(
+                    "success_url", "success?session_id={CHECKOUT_SESSION_ID}"
+                ),
                 cancel_url=domain_url + request.GET.get("cancel_url", "cancel/"),
                 payment_method_types=["card"],
                 mode="subscription",

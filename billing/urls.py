@@ -5,5 +5,5 @@ from billing import views
 urlpatterns = [
     path("config/", views.stripe_config, name="config"),
     path("checkout/", views.create_checkout_session, name="checkout"),
-    path("plans/", views.plans, name="plans")
+    path("plans/", views.plans, name="plans"),
 ]

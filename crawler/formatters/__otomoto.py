@@ -2,8 +2,8 @@ import time
 from datetime import datetime
 from typing import Dict, List
 
-from djmoney.money import Money
 from django.utils import timezone
+from djmoney.money import Money
 
 from crawler.formatters.formatter import BaseCrawler
 from crawler.models import CarMake, CarModel, Offer, OfferMetadata
@@ -220,7 +220,10 @@ class Crawler(BaseCrawler):
             metadata=metadata,
             title=data["title"],
             url=data["url"],
-            publication_date=timezone.make_aware(datetime.fromtimestamp(time.mktime(data["published_at"])), timezone.get_current_timezone()),
+            publication_date=timezone.make_aware(
+                datetime.fromtimestamp(time.mktime(data["published_at"])),
+                timezone.get_current_timezone(),
+            ),
             description=data["description"],
             model=model,
             trim=data.get("Wersja"),
