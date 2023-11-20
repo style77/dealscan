@@ -1,9 +1,10 @@
 help:
 	@echo Dealscan Make commands
-	@echo `make format` - format codebase
-	@echo `make lint`   - check code
-	@echo `make migrations`   - make migrations
-	@echo `make migrate`   - migrate
+	@echo `make format`             - format codebase
+	@echo `make lint`               - check code
+	@echo `make migrations`         - make migrations
+	@echo `make migrate`            - migrate
+	@echo `make tailwind-watcher`   - run tailwind watcher
 
 # Database
 
@@ -14,6 +15,20 @@ migrations:
 migrate:
 	@echo Migrating...
 	poetry run python manage.py migrate --noinput
+
+# Static
+
+collectstatic:
+	@echo Collecting static...
+	poetry run python manage.py collectstatic
+
+# Tailwind
+
+tailwind-watcher:
+	@echo Running watcher...
+	npx tailwindcss -i ./accounts/static/src/input.css -o ./accounts/static/src/output.css --watch
+
+# Lint
 
 format:
 	@echo Formatting codebase...
