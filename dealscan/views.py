@@ -17,22 +17,24 @@ class IndexView(TemplateView):
     template_name = "index/index.html"
 
 
+class PricingView(TemplateView):
+    template_name = "index/pricing.html"
+
+
 def get_created_accounts_percentage() -> float:
+    days_count = 7
     today = timezone.now()
-    start_of_week = today - timedelta(days=today.weekday())
-    end_of_week = start_of_week + timedelta(days=6)
+    start_of_week = today - timedelta(days=days_count)
+    prev_start_of_week = start_of_week - timedelta(days=days_count)
 
-    users_created_this_week = User.objects.filter(
-        date_joined__range=[start_of_week, end_of_week]
+    users_created_last_week = User.objects.filter(
+        date_joined__range=[start_of_week, today]
     ).count()
-    total_users_created = User.objects.filter(date_joined__lt=today).count()
+    users_created_prev_week = User.objects.filter(date_joined__range=[prev_start_of_week, start_of_week]).count()
 
-    if total_users_created != 0:
-        percentage_difference = (
-            (users_created_this_week - total_users_created) / total_users_created
-        ) * 100
-    else:
-        percentage_difference = 0
+    percentage_difference = (
+        (users_created_last_week - users_created_prev_week) / (users_created_last_week + users_created_prev_week)
+    ) * 100
 
     return percentage_difference
 
