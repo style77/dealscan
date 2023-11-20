@@ -12,7 +12,7 @@ class BaseLogger:
         print(msg)
 
 
-def update_feeds(logger=BaseLogger()) -> List[Offer]:
+def update_feeds(logger=BaseLogger()) -> List[List[Offer]]:
     sources = Source.objects.filter(Q(active=True))
     logger.write(f"Processing queue with size of: {sources.count()} feeds")
 
