@@ -55,9 +55,7 @@ THIRD_PARTY_APPS = [
     "django_countries",  # CountryField
 ]
 
-DEV_APPS = [
-    "django_browser_reload"
-]
+DEV_APPS = ["django_browser_reload"]
 
 INSTALLED_APPS = UNFOLD_APPS + DEFAULT_APPS + AUTH_APPS + CORE_APPS + THIRD_PARTY_APPS
 if DEBUG:
@@ -146,8 +144,8 @@ EMAIL_BACKEND = (
     else "django.core.mail.backends.console.EmailBackend"
 )  # TODO move to SES
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'none' if DEBUG else 'mandatory'
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_VERIFICATION = "none" if DEBUG else "mandatory"
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -167,7 +165,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Celery
 
 CELERY_BROKER_URL = REDIS_URL
-CELERY_RESULT_BACKEND = "django-db"
+# CELERY_RESULT_BACKEND = "django-db"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -180,6 +178,9 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PRICE_ID_MONTH = os.getenv("STRIPE_PRICE_ID_MONTH")
+STRIPE_PRICE_ID_YEAR = os.getenv("STRIPE_PRICE_ID_YEAR")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 
 # Internationalization
@@ -195,7 +196,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOCALE_PATHS = (BASE_DIR / 'locale/', )
+LOCALE_PATHS = (BASE_DIR / "locale/",)
 
 # Static
 
@@ -212,11 +213,15 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 MEDIA_URL = "/media/"
 
-COMPRESS_ROOT = BASE_DIR / 'static'
+COMPRESS_ROOT = BASE_DIR / "static"
 
 COMPRESS_ENABLED = True
 
-STATICFILES_FINDERS = ('compressor.finders.CompressorFinder', 'django.contrib.staticfiles.finders.FileSystemFinder', 'django.contrib.staticfiles.finders.AppDirectoriesFinder',)
+STATICFILES_FINDERS = (
+    "compressor.finders.CompressorFinder",
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
 
 # STORAGES = {
 #     "default": {
