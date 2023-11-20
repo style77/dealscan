@@ -75,10 +75,18 @@ class OfferMetadata(models.Model):
     ]
 
     out_of_town_consumption = models.DecimalField(
-        _("out of town fuel consumption"), decimal_places=1, max_digits=3, blank=True, null=True
+        _("out of town fuel consumption"),
+        decimal_places=1,
+        max_digits=3,
+        blank=True,
+        null=True,
     )
     in_town_consumption = models.DecimalField(
-        _("in town fuel consumption"), decimal_places=1, max_digits=3, blank=True, null=True
+        _("in town fuel consumption"),
+        decimal_places=1,
+        max_digits=3,
+        blank=True,
+        null=True,
     )
 
     power = models.PositiveSmallIntegerField(_("engine power"))
@@ -138,7 +146,7 @@ class Offer(models.Model):  # type: ignore[django-manager-missing]
         ("other", _("Other")),
     )
 
-    id = models.SlugField(primary_key=True, max_length=512)
+    id = models.SlugField(primary_key=True, max_length=512, unique=True)
     source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name="offers")
     metadata = models.OneToOneField(OfferMetadata, on_delete=models.CASCADE)
 
