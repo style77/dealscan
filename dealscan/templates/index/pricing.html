@@ -20,18 +20,4 @@
       </div>
     </div>
   </div>
-  <script>
-    function redirectToCheckout(sessionId) {
-        console.log(sessionId)
-        if (sessionId) {
-            Stripe.redirectToCheckout({ sessionId: sessionId })
-                .then(function (result) {
-                    if (result.error) {
-                        // Handle any errors during redirection
-                        console.error(result.error.message);
-                    }
-                });
-        }
-    }
-    </script>
 {% endblock %}
