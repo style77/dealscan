@@ -37,6 +37,9 @@ format:
 
 lint:
 	@echo Linting...
-	poetry run flake8 . && black8 . --check && isort . --check-only && mypy .
+	poetry run flake8 . 
+	poetry run black . --check 
+	poetry run isort . --check-only 
+	poetry run mypy .
 
 .PHONY: help format lint migrations migrate
