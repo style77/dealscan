@@ -17,3 +17,5 @@ RUN pip3 install poetry
 RUN poetry install
 
 COPY . /usr/src/app
+
+RUN poetry run python manage.py collectstatic --noinput
