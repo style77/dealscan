@@ -1,8 +1,20 @@
-from allauth.account.forms import LoginForm, ResetPasswordForm
+from allauth.account.forms import LoginForm, ResetPasswordForm, SignupForm
 from django import forms
 from django.urls import NoReverseMatch, reverse
 from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
+
+SIGNUP_INPUT_CLASS = "self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-gray-300 h-6 justify-start items-center gap-2 inline-flex grow shrink basis-0 text-gray-500 text-base font-normal font-sans leading-normal"
+
+
+class CustomSignupForm(SignupForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["username"].widget.attrs["class"] = SIGNUP_INPUT_CLASS
+        self.fields["email"].widget.attrs["class"] = SIGNUP_INPUT_CLASS
+        self.fields["password1"].widget.attrs["class"] = SIGNUP_INPUT_CLASS
+        self.fields["password2"].widget.attrs["class"] = SIGNUP_INPUT_CLASS
+        self.fields["password2"].label = _("Confirm password")
 
 
 class RememberPasswordWidget(forms.widgets.CheckboxInput):

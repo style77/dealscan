@@ -7,13 +7,13 @@ from allauth.account.views import (
 )
 from django.urls import reverse_lazy
 
-from accounts.forms import CustomLoginForm, CustomResetPasswordForm
+from accounts.forms import CustomLoginForm, CustomResetPasswordForm, CustomSignupForm
 from allauth.core import ratelimit
 
 
 class MySignupView(SignupView):
-    ...
-    # template_name = "signup.html"
+    template_name = "signup.html"
+    form_class = CustomSignupForm
 
 
 class MyLoginView(LoginView):
