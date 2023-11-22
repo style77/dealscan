@@ -3,6 +3,9 @@ from allauth.account.views import (
     PasswordResetDoneView,
     PasswordResetView,
     SignupView,
+    ConfirmEmailView,
+    EmailVerificationSentView,
+    EmailView
 )
 from allauth.core import ratelimit
 from django.urls import reverse_lazy
@@ -61,3 +64,15 @@ class MyPasswordResetDoneView(PasswordResetDoneView):
         context["provider"] = self._get_email_provider(email)
 
         return context
+
+
+class MyConfirmEmailView(ConfirmEmailView):
+    template_name = "email_confirm.html"
+
+
+class VerificationEmailSent(EmailVerificationSentView):
+    template_name = "verification_sent.html"
+
+
+class MyEmailView(EmailView):
+    template_name = "email_management.html"
