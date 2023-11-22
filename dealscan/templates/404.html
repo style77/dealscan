@@ -1,0 +1,37 @@
+{% extends 'layouts/simple_base.html' %}
+{% load i18n %}
+
+{% block content %}
+  <div class="w-full min-h-screen py-24 bg-white flex-col justify-start items-center gap-24 inline-flex">
+    <div class="self-stretch px-8 flex-col justify-start items-center gap-8 flex">
+      <div class="self-stretch grow shrink basis-0 flex-col justify-center items-center gap-12 flex">
+        <div class="self-stretch flex-col justify-start items-center gap-6 flex">
+          <div class="self-stretch text-center text-gray-900 text-6xl font-semibold font-sans leading-[72px]">
+            {% trans 'We lost this page' %}
+          </div>
+          <div class="self-stretch text-center text-slate-600 text-xl font-normal font-sans leading-[30px]">
+            {% trans "The page you are looking for doesn't exist or has been moved." %}
+          </div>
+        </div>
+        <div class="justify-start items-start gap-3 inline-flex">
+          <a href="{{ request.META.HTTP_REFERER|escape }}" class="px-[22px] py-4 bg-white rounded-lg shadow border border-gray-300 justify-center items-center gap-2.5 flex">
+            <span class="material-symbols-outlined">arrow_back</span>
+            <div class="px-0.5 justify-center items-center flex">
+              <div class="text-slate-700 text-lg font-semibold font-sans leading-7">
+                {% trans 'Go back' %}
+              </div>
+            </div>
+          </a>
+          {% url 'index' as index_url %}
+          <a href="{{ index_url }}" class="px-[22px] py-4 bg-green-500 rounded-lg shadow border border-green-500 justify-center items-center gap-2.5 flex">
+            <div class="px-0.5 justify-center items-center flex">
+              <div class="text-white text-lg font-semibold font-sans leading-7">
+                {% trans 'Go home' %}
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
