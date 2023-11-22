@@ -1,16 +1,13 @@
 {% load i18n %}
+{% load static %}
 
 <div class="w-full h-20 flex-col justify-center items-center inline-flex">
   <div class="self-stretch px-8 justify-between items-center inline-flex">
     <div class="justify-start items-center gap-10 flex">
       <div class="justify-start items-start flex">
         <div class="h-8 justify-center items-start gap-2.5 flex">
-          <div class="shadow justify-start items-start inline-flex">
-            <div class="w-8 h-8 relative bg-gradient-to-b from-white to-gray-300 rounded-lg border border-gray-300">
-              <div class="w-8 h-8 left-0 top-0 absolute"></div>
-              <div class="w-4 h-4 left-[8px] top-[8px] absolute bg-gradient-to-tr from-green-900 to-green-700 rounded-full shadow"></div>
-              <div class="w-8 h-4 left-0 top-[16px] absolute bg-white bg-opacity-20 rounded-bl-lg rounded-br-lg backdrop-blur-[5px]"></div>
-            </div>
+          <div class="justify-start items-start inline-flex">
+            <img src="{% static "images/logo.png" %}" class="w-8 h-8" alt="">
           </div>
           <div class="h-8 relative flex-col justify-start items-start flex"></div>
         </div>
