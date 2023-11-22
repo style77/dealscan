@@ -53,6 +53,7 @@ THIRD_PARTY_APPS = [
     "django_celery_beat",
     "djmoney",  # MoneyField
     "django_countries",  # CountryField
+    "widget_tweaks",
 ]
 
 DEV_APPS = ["django_browser_reload"]
@@ -145,8 +146,10 @@ EMAIL_BACKEND = (
     else "django.core.mail.backends.console.EmailBackend"
 )  # TODO move to SES
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "none" if DEBUG else "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_USERNAME_BLACKLIST = ["admin"]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
