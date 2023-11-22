@@ -22,7 +22,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
     model = User  # type: ignore[assignment]
-    list_display = ["email", "username", "date_joined", "is_staff"]
+    list_display = ["email", "username", "get_customer_id", "date_joined", "is_subscribed", "is_staff"]
     search_fields = ("email", "username", "first_name", "last_name")
     ordering = ("date_joined",)
     readonly_fields = ("date_joined", "last_login")
@@ -35,3 +35,10 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
             },
         ),
     )
+
+    def get_customer_id(self, obj):
+        return obj.stripe_user.customer_id if obj.stripe_user else None
+    get_customer_id.short_description = 'Customer ID'
+
+    def is_subscribed(self, obj):
+        return bool(obj.stripe_user.subscription_id) if obj.stripe_user else None
