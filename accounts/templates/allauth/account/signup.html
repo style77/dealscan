@@ -1,15 +1,17 @@
 {% extends 'layouts/simple_base.html' %}
 {% load i18n %}
+{% load static %}
 {% load allauth account socialaccount %}
 {% block head_title %}
   {% trans 'Dealscan.io - Sign In' %}
 {% endblock %}
 {% block content %}
-  <div class="w-full min-h-screen max-h-screen bg-white justify-start items-start inline-flex">
+  <div class="w-full min-h-screen max-h-screen bg-white justify-center items-start inline-flex">
     <div class="grow shrink basis-0 self-stretch flex-col justify-center items-center inline-flex">
-      <div class="self-stretch px-8 flex-col justify-start items-center flex">
-        <div class="self-stretch flex-col justify-start items-center gap-8 flex">
-          <div class="self-stretch flex-col justify-start items-start gap-3 flex">
+      <div class="self-stretch px-8 flex-col justify-center items-center flex">
+        <div class="self-stretch flex-col justify-center items-center gap-8 flex">
+          <img src="{% static 'images/logo.png' %}" class="w-12 h-12" alt="" />
+          <div class="flex-col justify-center items-center gap-3 flex text-center">
             <div class="self-stretch text-gray-900 text-3xl font-semibold font-sans leading-[38px]">
               {% trans 'Sign up' %}
             </div>
@@ -20,13 +22,6 @@
           {% url 'account_signup' as signup_url %}
           <form action="{{ signup_url }}" method="post">
             {% csrf_token %}
-            {% if form.non_field_errors %}
-              <ul>
-                {% for error in form.non_field_errors %}
-                  <li class="text-red-500 text-sm">{{ error }}</li>
-                {% endfor %}
-              </ul>
-            {% endif %}
             <div class="self-stretch rounded-xl flex-col justify-start items-center gap-6 flex">
               <div class="self-stretch flex-col justify-start items-start gap-5 flex">
                 <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">
@@ -63,6 +58,18 @@
                     </div>
                   </div>
                 </button>
+                {% if form.non_field_errors %}
+                  <ul class="max-w-xs">
+                    {% for error in form.non_field_errors %}
+                      <li class="my-6 text-xs font-medium tracking-wide text-red-500">{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+                {% for error in field.errors %}
+                <span class="flex items-center max-w-xs mt-1 ml-1 text-xs font-medium tracking-wide text-red-500">
+                  {{ error }}
+                </span>
+                {% endfor %}
               </div>
             </div>
           </form>
