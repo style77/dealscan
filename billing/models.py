@@ -1,8 +1,10 @@
 import stripe
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models.signals import post_save
 from django.dispatch import receiver
+from allauth.account.signals import email_confirmed
+from django.shortcuts import get_object_or_404
+
 
 User = get_user_model()
 
@@ -15,7 +17,11 @@ class StripeUser(models.Model):
     subscription_id = models.CharField(max_length=255, null=True)
 
 
-@receiver(post_save, sender=User, dispatch_uid="create_stripe_customer")
-def create_stripe_customer(sender, instance, **kwargs):
-    customer = stripe.Customer.create(email=instance.email)
-    StripeUser.objects.create(user=instance, customer_id=customer.id)
+@receiver(email_confirmed)
+def create_stripe_customer(sender, request, email_address, **kwargs):
+    user = get_object_or_404(User, email=email_address)
+    if request.user.is_anonymous:
+        return
+
+    customer = stripe.Customer.create(email=user.email)
+    StripeUser.objects.create(user=user, customer_id=customer.id)
