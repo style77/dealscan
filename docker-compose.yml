@@ -33,7 +33,6 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     command: poetry run python manage.py runserver 0.0.0.0:8000
-    image: dealscan:latest
     container_name: dealscan
     ports:
       - "8000:8000"
@@ -57,10 +56,19 @@ services:
       timeout: 10s
       retries: 10
 
+  dealscan-sync:
+    build:
+      dockerfile: Dockerfile
+    container_name: dealscan-sync
+    restart: no
+    command: poetry run python manage.py djstripe_sync_models
+    depends_on:
+      dealscan:
+        condition: service_started
+
   dealscan-migrations:
     build:
       dockerfile: Dockerfile
-    image: dealscan-migrations:latest
     container_name: dealscan-migrations
     restart: no
     command: poetry run python manage.py migrate --noinput
@@ -72,51 +80,61 @@ services:
       dealscan-db:
         condition: service_healthy
 
-  dealscan-celery:
-    build:
-      dockerfile: Dockerfile
-    image: dealscan-celery:latest
-    container_name: dealscan-celery
-    command: poetry run celery -A dealscan worker -Q default -n dealscan.%%h --loglevel=INFO --max-memory-per-child=512000 --concurrency=1
+  stripe-cli:
+    image: stripe/stripe-cli
+    command: listen --forward-to dealscan:8000/payments/webhook/ --skip-verify
+    depends_on:
+      - dealscan
     env_file:
       - .env
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      dealscan:
-        condition: service_healthy
-      dealscan-redis:
-        condition: service_healthy
+    environment:
+      - STRIPE_API_KEY=${STRIPE_TEST_SECRET_KEY}
 
-  dealscan-celery-beat:
-      build:
-        dockerfile: Dockerfile
-      image: dealscan-celery-beat:latest
-      container_name: dealscan-celery-beat
-      command: poetry run celery -A dealscan beat -S redbeat.RedBeatScheduler --loglevel=DEBUG --pidfile /tmp/dealscan-celerybeat.pid
-      env_file:
-      - .env
-      volumes:
-        - .:/usr/src/app
-      depends_on:
-        - dealscan
-        - dealscan-celery
-        - dealscan-db
-        - dealscan-redis
+  # dealscan-celery:
+  #   build:
+  #     dockerfile: Dockerfile
+  #   image: dealscan-celery:latest
+  #   container_name: dealscan-celery
+  #   command: poetry run celery -A dealscan worker -Q default -n dealscan.%%h --loglevel=INFO --max-memory-per-child=512000 --concurrency=1
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - .:/usr/src/app
+  #   depends_on:
+  #     dealscan:
+  #       condition: service_healthy
+  #     dealscan-redis:
+  #       condition: service_healthy
 
-  dealscan-celery-flower:
-      build:
-        dockerfile: Dockerfile
-      container_name: dealscan-celery-flower
-      command: poetry run celery -A dealscan flower --loglevel=INFO --port=9090 --broker=redis://dealscan-redis:6379/0 --basic_auth=dealscan:dealscan
-      env_file:
-      - .env
-      ports:
-        - "127.0.0.1:9090:9090"
-      restart: unless-stopped
-      volumes:
-        - .:/usr/src/app
-      depends_on:
-        - dealscan
-        - dealscan-celery
-        - dealscan-redis
+  # dealscan-celery-beat:
+  #     build:
+  #       dockerfile: Dockerfile
+  #     image: dealscan-celery-beat:latest
+  #     container_name: dealscan-celery-beat
+  #     command: poetry run celery -A dealscan beat -S redbeat.RedBeatScheduler --loglevel=DEBUG --pidfile /tmp/dealscan-celerybeat.pid
+  #     env_file:
+  #     - .env
+  #     volumes:
+  #       - .:/usr/src/app
+  #     depends_on:
+  #       - dealscan
+  #       - dealscan-celery
+  #       - dealscan-db
+  #       - dealscan-redis
+
+  # dealscan-celery-flower:
+  #     build:
+  #       dockerfile: Dockerfile
+  #     container_name: dealscan-celery-flower
+  #     command: poetry run celery -A dealscan flower --loglevel=INFO --port=9090 --broker=redis://dealscan-redis:6379/0 --basic_auth=dealscan:dealscan
+  #     env_file:
+  #     - .env
+  #     ports:
+  #       - "127.0.0.1:9090:9090"
+  #     restart: unless-stopped
+  #     volumes:
+  #       - .:/usr/src/app
+  #     depends_on:
+  #       - dealscan
+  #       - dealscan-celery
+  #       - dealscan-redis
