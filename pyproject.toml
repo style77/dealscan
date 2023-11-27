@@ -27,6 +27,7 @@ django-compressor = "^4.4"
 flower = "^2.0.1"
 django-widget-tweaks = "^1.5.0"
 dj-stripe = "^2.8.3"
+django-components = "^0.29"
 
 
 [tool.poetry.group.dev.dependencies]
