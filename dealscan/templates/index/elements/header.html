@@ -7,7 +7,7 @@
       <div class="justify-start items-start flex">
         <div class="h-8 justify-center items-start gap-2.5 flex">
           <div class="justify-start items-start inline-flex">
-            <img src="{% static "images/logo.png" %}" class="w-8 h-8" alt="">
+            <img src="{% static 'images/logo.png' %}" class="w-8 h-8" alt="" />
           </div>
           <div class="h-8 relative flex-col justify-start items-start flex"></div>
         </div>
@@ -16,27 +16,49 @@
         <a class="justify-center items-center gap-2 flex" href="{% url 'index' %}"><div class="text-green-900 hover:text-green-700 text-base font-semibold font-sans leading-normal">Home</div></a>
         <div class="flex-col justify-start items-center inline-flex">
           <a class="justify-center items-center gap-2 inline-flex hover:text-green-700">
-            <div class="text-green-900 text-base font-semibold font-sans leading-normal">{% trans "About" %}</div>
+            <div class="text-green-900 text-base font-semibold font-sans leading-normal">
+              {% trans 'About' %}
+            </div>
           </a>
         </div>
         <a class="justify-center items-center gap-2 flex" href="{% url 'pricing' %}">
-          <div class="text-green-700 text-base font-semibold font-sans leading-normal">{% trans "Pricing" %}</div>
+          <div class="text-green-700 text-base font-semibold font-sans leading-normal">
+            {% trans 'Pricing' %}
+          </div>
         </a>
       </div>
     </div>
     <div class="justify-start items-center gap-3 flex">
-      {% url 'account_login' as login_url %}
-      <a href="{{ login_url }}" class="px-4 py-2.5 rounded-lg justify-center items-center gap-1.5 flex">
-        <div class="px-0.5 justify-center items-center flex">
-          <div class="text-green-700 text-base font-semibold font-sans leading-normal">{% trans "Log in" %}</div>
+      {% if request.user.is_authenticated %}
+        {% url 'dashboard' as dashboard_url %}
+        <div class="flex flex-col justify-end">
+          <a href="{{ dashboard_url }}" class="px-4 py-2.5 bg-green-500 hover:bg-green-400 transition rounded-lg shadow border border-green-500 hover:border-green-400 justify-center items-center gap-1.5 flex">
+            <div class="px-0.5 justify-center items-center flex">
+              <div class="text-white text-base font-semibold font-sans leading-normal">
+                {% trans 'Dashboard' %}
+              </div>
+            </div>
+          </a>
+          <a href="{{ logout_url }}" class="text-sm text-red-300">Logout</a>
         </div>
-      </a>
-      {% url 'account_signup' as signup_url %}
-      <a href="{{ signup_url }}" class="px-4 py-2.5 bg-green-500 hover:bg-green-400 transition rounded-lg shadow border border-green-500 hover:border-green-400 justify-center items-center gap-1.5 flex">
-        <div class="px-0.5 justify-center items-center flex">
-          <div class="text-white text-base font-semibold font-sans leading-normal">{% trans "Sign up" %}</div>
-        </div>
-      </a>
+      {% else %}
+        {% url 'account_login' as login_url %}
+        <a href="{{ login_url }}" class="px-4 py-2.5 rounded-lg justify-center items-center gap-1.5 flex">
+          <div class="px-0.5 justify-center items-center flex">
+            <div class="text-green-700 text-base font-semibold font-sans leading-normal">
+              {% trans 'Log in' %}
+            </div>
+          </div>
+        </a>
+        {% url 'account_signup' as signup_url %}
+        <a href="{{ signup_url }}" class="px-4 py-2.5 bg-green-500 hover:bg-green-400 transition rounded-lg shadow border border-green-500 hover:border-green-400 justify-center items-center gap-1.5 flex">
+          <div class="px-0.5 justify-center items-center flex">
+            <div class="text-white text-base font-semibold font-sans leading-normal">
+              {% trans 'Sign up' %}
+            </div>
+          </div>
+        </a>
+      {% endif %}
     </div>
   </div>
 </div>
