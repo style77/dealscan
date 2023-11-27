@@ -17,3 +17,4 @@ class DashboardView(TemplateView):
 
 
 dashboard_view = login_required(DashboardView.as_view(), login_url=LOGIN_URL)
+billing_view = login_required(DashboardView.as_view(), login_url=LOGIN_URL)
