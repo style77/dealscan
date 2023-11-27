@@ -38,7 +38,7 @@ DEFAULT_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
+    "django_components.safer_staticfiles",
     "django.contrib.sites",
     "compressor",
 ]
@@ -54,7 +54,8 @@ THIRD_PARTY_APPS = [
     "djmoney",  # MoneyField
     "django_countries",  # CountryField
     "widget_tweaks",
-    "djstripe"
+    "djstripe",
+    "django_components",
 ]
 
 DEV_APPS = ["django_browser_reload"]
@@ -89,17 +90,28 @@ TEMPLATES = [
             os.path.normpath(
                 os.path.join(BASE_DIR, "accounts", "templates", "allauth", "account")
             ),
-            os.path.normpath(
-                os.path.join(BASE_DIR, "crawler", "templates")
-            )
+            os.path.normpath(os.path.join(BASE_DIR, "crawler", "templates")),
         ],
-        "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+            ],
+            "builtins": [
+                "django_components.templatetags.component_tags",
+                "django.templatetags.i18n",
+            ],
+            "loaders": [
+                (
+                    "django.template.loaders.cached.Loader",
+                    [
+                        "django.template.loaders.filesystem.Loader",
+                        "django.template.loaders.app_directories.Loader",
+                        "django_components.template_loader.Loader",
+                    ],
+                )
             ],
         },
     },
@@ -329,25 +341,25 @@ UNFOLD = {
                     {
                         "title": _("API Keys"),
                         "icon": "key",
-                        "link": reverse_lazy("admin:djstripe_apikey_changelist")
+                        "link": reverse_lazy("admin:djstripe_apikey_changelist"),
                     },
                     {
                         "title": _("Customers"),
                         "icon": "person",
-                        "link": reverse_lazy("admin:djstripe_customer_changelist")
+                        "link": reverse_lazy("admin:djstripe_customer_changelist"),
                     },
                     {
                         "title": _("Subscriptions"),
                         "icon": "loyalty",
-                        "link": reverse_lazy("admin:djstripe_subscription_changelist")
+                        "link": reverse_lazy("admin:djstripe_subscription_changelist"),
                     },
                     {
                         "title": _("Products"),
                         "icon": "inventory_2",
-                        "link": reverse_lazy("admin:djstripe_product_changelist")
-                    }
-                ]
-            }
+                        "link": reverse_lazy("admin:djstripe_product_changelist"),
+                    },
+                ],
+            },
         ],
     },
     "COLORS": {
