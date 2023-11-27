@@ -22,10 +22,10 @@ class BillingView(TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["current_plan_id"]: Optional[str] = self.request.GET.get("plan_id")
+        context["current_plan_id"] = self.request.GET.get("plan_id")
         z = Customer.objects.filter(subscriber=self.request.user).first()
         subscriptions = z.subscriptions if z else None
-        context["subscriptions"]: Optional[List[Subscription]] = subscriptions
+        context["subscriptions"] = subscriptions
 
         return context
 
