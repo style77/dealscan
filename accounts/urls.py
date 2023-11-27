@@ -1,15 +1,33 @@
-from django.urls import path
+from django.urls import path, re_path
+from django.contrib.auth.decorators import login_required
 
 from accounts.views import (
     MyLoginView,
     MyPasswordResetDoneView,
     MyPasswordResetView,
     MySignupView,
+    MyConfirmEmailView,
+    VerificationEmailSent,
+    MyEmailView
 )
+
+from allauth.account.views import LogoutView
 
 urlpatterns = [
     path(r"login/", MyLoginView.as_view(), name="account_login"),
     path(r"signup/", MySignupView.as_view(), name="account_signup"),
+    path("logout/", LogoutView.as_view(), name="account_logout"),
+    path("email/", login_required(MyEmailView.as_view()), name="account_email"),
+    path(
+        "confirm-email/",
+        VerificationEmailSent.as_view(),
+        name="account_email_verification_sent",
+    ),
+    re_path(
+        r"^confirm-email/(?P<key>[-:\w]+)/$",
+        MyConfirmEmailView.as_view(),
+        name="account_confirm_email",
+    ),
     path(
         r"password/reset/", MyPasswordResetView.as_view(), name="account_reset_password"
     ),
