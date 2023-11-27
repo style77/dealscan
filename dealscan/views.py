@@ -1,5 +1,7 @@
 import json
 import random
+from typing import Any
+from djstripe.models import Product
 from datetime import datetime, timedelta
 
 from django.contrib.auth import get_user_model
@@ -17,6 +19,12 @@ class IndexView(TemplateView):
 
 class PricingView(TemplateView):
     template_name = "index/pricing.html"
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["products"] = Product.objects.filter(active=True)
+
+        return context
 
 
 def get_created_accounts_percentage() -> float:
@@ -44,7 +52,7 @@ def get_formatted_sign(val: float) -> str:
     if val >= 0:
         return "+"
     else:
-        return ""  # since negative values got minus before value itself
+        return ""  # negative values got minus before value itself
 
 
 def dashboard_callback(request, context):
