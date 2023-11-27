@@ -1,5 +1,6 @@
 {% extends 'layouts/simple_base.html' %}
 {% load i18n %}
+{% load static %}
 {% load allauth account socialaccount %}
 {% block head_title %}
   {% trans 'Dealscan.io - Sign In' %}
@@ -10,7 +11,7 @@
       <div class="self-stretch grow shrink basis-0 px-8 flex-col justify-center items-center flex">
         <div class="self-stretch flex-col justify-start items-center gap-8 flex">
           <div class="self-stretch flex-col justify-start items-center gap-6 flex">
-            <img src="" alt="logo" class="w-12 h-12" />
+            <img src="{% static "images/logo.png" %}" class="w-12 h-12" alt="">
             <div class="self-stretch flex-col justify-start items-start gap-3 flex">
               <div class="self-stretch text-center text-gray-900 text-3xl font-semibold font-sans leading-[38px]">
                 {% trans 'Welcome back' %}
@@ -32,10 +33,10 @@
                   {% endfor %}
                 </ul>
               {% endif %}
-              <div class="self-stretch h-40 flex-col justify-start items-start gap-5 flex">
-                <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">{{ form.login.label_tag }}
+              <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+                <div class="self-stretch h-[80px] flex-col justify-start items-start gap-1.5 flex">{{ form.login.label_tag }}
                   {{ form.login }}</div>
-                <div class="self-stretch h-[70px] flex-col justify-start items-start gap-1.5 flex">{{ form.password.label_tag }}
+                <div class="self-stretch h-[80px] flex-col justify-start items-start gap-1.5 flex">{{ form.password.label_tag }}
                   {{ form.password }}</div>
               </div>
               {% if redirect_field_value %}
