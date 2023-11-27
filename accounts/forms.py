@@ -9,7 +9,7 @@ SIGNUP_INPUT_CLASS = "self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow bord
 
 class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(CustomSignupForm, self).__init__(*args, **kwargs)
         self.fields["username"].widget.attrs["class"] = SIGNUP_INPUT_CLASS
         self.fields["email"].widget.attrs["class"] = SIGNUP_INPUT_CLASS
         self.fields["password1"].widget.attrs["class"] = SIGNUP_INPUT_CLASS
