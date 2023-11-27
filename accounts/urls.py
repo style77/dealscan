@@ -1,17 +1,16 @@
-from django.urls import path, re_path
+from allauth.account.views import LogoutView
 from django.contrib.auth.decorators import login_required
+from django.urls import path, re_path
 
 from accounts.views import (
+    MyConfirmEmailView,
+    MyEmailView,
     MyLoginView,
     MyPasswordResetDoneView,
     MyPasswordResetView,
     MySignupView,
-    MyConfirmEmailView,
     VerificationEmailSent,
-    MyEmailView
 )
-
-from allauth.account.views import LogoutView
 
 urlpatterns = [
     path(r"login/", MyLoginView.as_view(), name="account_login"),

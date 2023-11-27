@@ -1,10 +1,9 @@
 from typing import Any, Dict, List, Optional
-from django.views.generic import TemplateView
+
 from django.contrib.auth.decorators import login_required
-
-from djstripe.models import Customer, Subscription
-
 from django.urls import reverse_lazy
+from django.views.generic import TemplateView
+from djstripe.models import Customer, Subscription
 
 LOGIN_URL = reverse_lazy("account_login")
 

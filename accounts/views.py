@@ -1,15 +1,16 @@
 from typing import Any
+
+from allauth.account.utils import has_verified_email
 from allauth.account.views import (
+    ConfirmEmailView,
+    EmailVerificationSentView,
+    EmailView,
     LoginView,
     PasswordResetDoneView,
     PasswordResetView,
     SignupView,
-    ConfirmEmailView,
-    EmailVerificationSentView,
-    EmailView
 )
 from allauth.core import ratelimit
-from allauth.account.utils import has_verified_email
 from django.urls import reverse_lazy
 
 from accounts.forms import CustomLoginForm, CustomResetPasswordForm, CustomSignupForm
@@ -83,4 +84,3 @@ class MyEmailView(EmailView):
         context = super().get_context_data(**kwargs)
         context["email_verified"] = has_verified_email(self.request.user)
         return context
-    
