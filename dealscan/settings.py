@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 
 DEBUG = os.getenv("DEBUG", False)
 
-ALLOWED_HOSTS: List[str] = []
+ALLOWED_HOSTS: List[str] = ["*"]
 
 
 # Application definition
@@ -45,7 +45,7 @@ DEFAULT_APPS = [
 
 AUTH_APPS = ["allauth", "allauth.account", "allauth.socialaccount"]
 
-CORE_APPS = ["accounts", "billing", "crawler"]
+CORE_APPS = ["accounts", "crawler"]
 
 THIRD_PARTY_APPS = [
     "simple_history",
@@ -54,6 +54,7 @@ THIRD_PARTY_APPS = [
     "djmoney",  # MoneyField
     "django_countries",  # CountryField
     "widget_tweaks",
+    "djstripe"
 ]
 
 DEV_APPS = ["django_browser_reload"]
@@ -88,6 +89,9 @@ TEMPLATES = [
             os.path.normpath(
                 os.path.join(BASE_DIR, "accounts", "templates", "allauth", "account")
             ),
+            os.path.normpath(
+                os.path.join(BASE_DIR, "crawler", "templates")
+            )
         ],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -181,10 +185,12 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 # Stripe
 
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
-STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
-STRIPE_PRICE_ID_MONTH = os.getenv("STRIPE_PRICE_ID_MONTH")
-STRIPE_PRICE_ID_YEAR = os.getenv("STRIPE_PRICE_ID_YEAR")
-STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+STRIPE_LIVE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY")
+STRIPE_TEST_SECRET_KEY = os.getenv("STRIPE_TEST_SECRET_KEY")
+STRIPE_LIVE_MODE = not DEBUG
+DJSTRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+DJSTRIPE_USE_NATIVE_JSONFIELD = True
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 
 
 # Internationalization
@@ -316,6 +322,32 @@ UNFOLD = {
                     },
                 ],
             },
+            {
+                "title": _("Subscriptions"),
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("API Keys"),
+                        "icon": "key",
+                        "link": reverse_lazy("admin:djstripe_apikey_changelist")
+                    },
+                    {
+                        "title": _("Customers"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:djstripe_customer_changelist")
+                    },
+                    {
+                        "title": _("Subscriptions"),
+                        "icon": "loyalty",
+                        "link": reverse_lazy("admin:djstripe_subscription_changelist")
+                    },
+                    {
+                        "title": _("Products"),
+                        "icon": "inventory_2",
+                        "link": reverse_lazy("admin:djstripe_product_changelist")
+                    }
+                ]
+            }
         ],
     },
     "COLORS": {
