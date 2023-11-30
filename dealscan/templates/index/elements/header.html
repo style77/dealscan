@@ -31,7 +31,7 @@
     <div class="justify-start items-center gap-3 flex">
       {% if request.user.is_authenticated %}
         {% url 'dashboard' as dashboard_url %}
-        <div class="flex flex-col justify-end">
+        <div class="flex flex-col w-full justify-end">
           <a href="{{ dashboard_url }}" class="px-4 py-2.5 bg-green-500 hover:bg-green-400 transition rounded-lg shadow border border-green-500 hover:border-green-400 justify-center items-center gap-1.5 flex">
             <div class="px-0.5 justify-center items-center flex">
               <div class="text-white text-base font-semibold font-sans leading-normal">
@@ -39,7 +39,6 @@
               </div>
             </div>
           </a>
-          <a href="{{ logout_url }}" class="text-sm text-red-300">Logout</a>
         </div>
       {% else %}
         {% url 'account_login' as login_url %}
