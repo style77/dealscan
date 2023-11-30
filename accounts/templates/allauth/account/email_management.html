@@ -3,7 +3,7 @@
 {% block content %}
   {% url 'account_email' as email_url %}
   {% if not email_verified %}
-    <div class="m-4 w-full h-[72px] p-3 bg-green-700 rounded-xl shadow border border-green-500 justify-start items-start inline-flex">
+    <div class="m-4 h-[72px] p-3 bg-green-700 rounded-xl shadow border border-green-500 justify-start items-start inline-flex">
       <div class="grow shrink basis-0 h-12 justify-start items-center gap-3 flex">
         <div class="grow shrink basis-0 h-12 justify-start items-center gap-4 flex">
           <div class="w-12 h-12 p-3 bg-green-500 rounded-[10px] justify-center items-center flex">
@@ -16,7 +16,7 @@
         </div>
         <form class="justify-start items-center gap-2 flex" action="{{ email_url }}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="email" value="{{ primary_email }}">
+          <input type="hidden" name="email" value="{{ primary_email }}" />
           <button type="submit" name="action_send" class="px-4 py-2.5 bg-white rounded-lg shadow border border-emerald-300 justify-center items-center gap-1.5 flex">
             <div class="px-0.5 justify-center items-center flex">
               <div class="text-green-700 text-base font-semibold font-sans leading-normal">Resend email</div>
@@ -26,4 +26,106 @@
       </div>
     </div>
   {% endif %}
+  <div class="pt-8 pb-12 bg-white flex-col justify-start items-start gap-8 flex" x-data="{'tabIndex': 0}">
+    <div class="self-stretch px-8 flex-col justify-start items-start gap-6 flex">
+      <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+        <div class="self-stretch justify-start items-start gap-4 inline-flex">
+          <div class="grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
+            <div class="self-stretch text-gray-900 text-3xl font-semibold font-sans leading-[38px]">Settings</div>
+          </div>
+        </div>
+      </div>
+      <div class="self-stretch border-b border-gray-200 flex-col justify-start items-start gap-2 flex">
+        <div class="justify-start items-start gap-6 inline-flex overflow-x-auto lg:overflow-hidden w-[240px] lg:w-full">
+          <div @click="tabIndex = 0" class="cursor-pointer hover:border-b-2 transition-all px-1 pb-3 justify-center items-center gap-2 flex" :class="{'border-green-500 border-b-2': tabIndex === 0}">
+            <div class="text-gray-500 text-sm font-semibold font-sans leading-tight" :class="{'text-emerald-700': tabIndex === 0}">Details</div>
+          </div>
+          <div @click="tabIndex = 1" class="cursor-pointer hover:border-b-2 transition-all px-1 pb-3 justify-center items-center gap-2 flex" :class="{'border-green-500 border-b-2': tabIndex === 1}">
+            <div class="text-gray-500 text-sm font-semibold font-sans leading-tight" :class="{'text-emerald-700': tabIndex === 1}">Password</div>
+          </div>
+          <div @click="tabIndex = 2" class="cursor-pointer hover:border-b-2 transition-all px-1 pb-3 justify-center items-center gap-2 flex" :class="{'border-green-500 border-b-2': tabIndex === 2}">
+            <div class="text-gray-500 text-sm font-semibold font-sans leading-tight" :class="{'text-emerald-700': tabIndex === 2}">Notifications</div>
+          </div>
+          <div @click="tabIndex = 3" class="cursor-pointer hover:border-b-2 transition-all px-1 pb-3 justify-center items-center gap-2 flex" :class="{'border-green-500 border-b-2': tabIndex === 3}">
+            <div class="text-gray-500 text-sm font-semibold font-sans leading-tight" :class="{'text-emerald-700': tabIndex === 3}">Integrations</div>
+          </div>
+          <div @click="tabIndex = 4" class="cursor-pointer hover:border-b-2 transition-all px-1 pb-3 justify-center items-center gap-2 flex" :class="{'border-green-500 border-b-2': tabIndex === 4}">
+            <div class="text-gray-500 text-sm font-semibold font-sans leading-tight" :class="{'text-emerald-700': tabIndex === 4}">API</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="self-stretch flex-col justify-start items-start gap-6 flex w-full" x-show="tabIndex === 0">
+      <div class="self-stretch px-8 flex-col justify-start items-start gap-6 flex">
+        <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+          <div class="self-stretch justify-start items-start gap-4 inline-flex flex-col lg:flex-row">
+            <div class="grow shrink basis-0 self-stretch flex-col justify-center items-start gap-1 inline-flex">
+              <div class="self-stretch text-gray-900 text-lg font-semibold font-sans leading-7">Personal info</div>
+              <div class="self-stretch text-slate-600 text-sm font-normal font-sans leading-tight">Update your photo and personal details here.</div>
+            </div>
+            <div class="justify-start items-center gap-3 flex">
+              <div class="px-3.5 py-2.5 bg-white rounded-lg shadow border border-gray-300 justify-center items-center gap-1 flex">
+                <div class="px-0.5 justify-center items-center flex">
+                  <div class="text-slate-700 text-sm font-semibold font-sans leading-tight">Cancel</div>
+                </div>
+              </div>
+              <div class="px-3.5 py-2.5 bg-green-500 rounded-lg shadow border border-green-500 justify-center items-center gap-1 flex">
+                <div class="px-0.5 justify-center items-center flex">
+                  <div class="text-white text-sm font-semibold font-sans leading-tight">Save</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+          <div class="self-stretch justify-start items-start gap-8 inline-flex flex-col lg:flex-row">
+            <div class="grow shrink basis-0 flex-col justify-start items-start inline-flex">
+              <div class="self-stretch text-slate-700 text-sm font-semibold font-sans leading-tight">Username</div>
+              <div class="self-stretch text-slate-600 text-sm font-normal font-sans leading-tight">
+                No one can see your username and we don't care. <br /> You can either use your real name or some imagined nickname.
+              </div>
+            </div>
+            <div class="grow shrink basis-0 h-11 justify-start items-start gap-6 flex">
+              <div class="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
+                <div class="self-stretch h-11 flex-col justify-start items-start gap-1.5 flex">
+                  <input placeholder="{% trans 'Jon Snow' %}" value="{{ user.username }}" required class="self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-gray-300 justify-start items-center gap-2 inline-flex grow shrink basis-0 h-6 text-gray-900 text-base font-normal font-sans leading-normal" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="self-stretch h-px bg-gray-200"></div>
+          <div class="self-stretch justify-start items-start gap-8 inline-flex flex-col lg:flex-row">
+            <div class="grow shrink basis-0 flex-col justify-start items-start inline-flex">
+              <div class="self-stretch text-slate-700 text-sm font-semibold font-sans leading-tight">Email address</div>
+            </div>
+            <div class="grow shrink basis-0 h-11 justify-start items-start gap-6 flex">
+              <div class="grow shrink basis-0 flex-col justify-start items-start inline-flex">
+                <div class="self-stretch h-11 flex-col justify-start items-start flex">
+                  <input type="email" required placeholder="{% trans 'example@example.com' %}" value="{{ primary_email }}" class="self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-gray-300 justify-start items-center gap-2 inline-flex grow shrink basis-0 h-6 text-gray-900 text-base font-normal font-sans leading-normal" />
+                </div>
+                <span class="self-end text-xs text-slate-500">Verified: {{ email_verified }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="self-stretch h-px bg-gray-200"></div>
+          <div class="self-stretch justify-start items-start gap-8 inline-flex flex-col lg:flex-row">
+            <div class="grow shrink basis-0 flex-col justify-start items-start inline-flex">
+              <div class="self-stretch text-slate-700 text-sm font-semibold font-sans leading-tight">Phone Number</div>
+              <div class="self-stretch text-slate-600 text-sm font-normal font-sans leading-tight">
+                Used for sending notifications.
+              </div>
+            </div>
+            <div class="grow shrink basis-0 h-11 justify-start items-start gap-6 flex">
+              <div class="grow shrink basis-0 flex-col justify-start items-start inline-flex">
+                <div class="self-stretch h-11 flex-col justify-start items-start flex">
+                  <input type="tel" required placeholder="{% trans '+48123456789' %}" value="{{ user.phone_number }}" class="self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-gray-300 justify-start items-center gap-2 inline-flex grow shrink basis-0 h-6 text-gray-900 text-base font-normal font-sans leading-normal" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="self-stretch h-px bg-gray-200"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
