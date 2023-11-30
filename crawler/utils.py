@@ -7,6 +7,10 @@ from crawler.formatters.formatter import FeedFormatter
 from crawler.models import Offer, Source
 
 
+class NoActiveSourcesError(Exception):
+    pass
+
+
 class BaseLogger:
     def write(self, msg, *args, **kwargs):
         print(msg)
@@ -14,6 +18,9 @@ class BaseLogger:
 
 def update_feeds(logger=BaseLogger()) -> List[List[Offer]]:
     sources = Source.objects.filter(Q(active=True))
+    if sources.count() <= 0:
+        raise NoActiveSourcesError("No active sources found")
+
     logger.write(f"Processing queue with size of: {sources.count()} feeds")
 
     all_results = []
