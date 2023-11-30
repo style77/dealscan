@@ -56,6 +56,7 @@ THIRD_PARTY_APPS = [
     "widget_tweaks",
     "djstripe",
     "django_components",
+    "phonenumber_field",  # PhoneNumberField
 ]
 
 DEV_APPS = ["django_browser_reload"]
@@ -385,4 +386,10 @@ UNFOLD = {
             },
         },
     },
+}
+
+
+SOCIALS = {
+    "TWITTER": "https://twitter.com/dealscan",
+    "FACEBOOK": "https://facebook.com/dealscan",
 }
