@@ -1,14 +1,14 @@
 {% load static %}
 
-<div x-data="{ sidebarOpen: true }">
+<div x-data="{ sidebarOpen: $persist(true) }" :class="{ 'w-[230px]': sidebarOpen, 'w-[112px]': !sidebarOpen }">
   <div class="flex flex-col basis-0 bg-white border-r-2 min-h-screen grow shrink self-stretch justify-between items-start">
     <div class="self-stretch pt-8 flex-col justify-start items-start gap-6 flex">
       <div class="self-stretch h-8 pl-6 pr-5 flex justify-center">
         <div class="h-8 flex justify-start items-center gap-2.5" :class="{ 'w-full': sidebarOpen }">
-          <div class="flex flex-row gap-4 shadow w-8 h-8 relative bg-gradient-to-b from-white to-gray-300 rounded-lg border border-gray-300">
-            <img src="{% static 'images/logo.png' %}" class="w-7 h-7 flex justify-center items-center" />
-            <span x-show="sidebarOpen" class="self-center">Dealscan.io</span>
+          <div class="flex flex-row gap-4 w-8 h-8 relative items-center justify-center rounded-xl shadow border border-gray-200">
+            <img src="{% static 'images/logo.png' %}" class="w-6 h-6" />
           </div>
+          <span x-show="sidebarOpen" class="self-center text-lg font-bold">Dealscan.io</span>
         </div>
         <div class="flex self-center" :class="{'ml-2': !sidebarOpen}">
           <button @click="sidebarOpen = !sidebarOpen" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900 flex self-center">
@@ -77,13 +77,13 @@
         </div>
       </div>
       <div class="self-stretch pl-2 pr-8 pt-6 border-t border-gray-200 justify-start items-start gap-4 inline-flex">
-        <div class="grow shrink basis-0 h-10 justify-start items-center gap-3 flex" x-show="sidebarOpen">
+        <div class="grow shrink basis-0 h-10 justify-start items-center flex" :class="{'gap-1': !sidebarOpen, 'gap-3': sidebarOpen}">
           <span class="material-symbols-outlined">
             account_circle
           </span>
           <div class="flex-col justify-start items-start inline-flex">
             <div class="text-slate-700 text-sm font-semibold font-sans leading-tight">{{ request.user.username }}</div>
-            <div class="text-slate-600 text-sm font-normal font-sans leading-tight">{{ request.user.email }}</div>
+            <div class="text-slate-600 text-sm font-normal font-sans leading-tight" x-show="sidebarOpen">{{ request.user.email }}</div>
           </div>
         </div>
       </div>
@@ -92,7 +92,6 @@
 </div>
 
 <script>
-  // Alpine.js script to handle responsive sidebar
   window.addEventListener('resize', () => {
     Alpine.store('windowWidth', window.innerWidth);
   });
