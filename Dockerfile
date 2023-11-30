@@ -14,8 +14,10 @@ WORKDIR /usr/src/app
 COPY poetry.lock pyproject.toml /usr/src/app/
 
 RUN pip3 install poetry
-RUN poetry install
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction \
+    && rm -rf /root/.cache/pypoetry
 
 COPY . /usr/src/app
 
-RUN poetry run python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput

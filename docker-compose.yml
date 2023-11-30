@@ -32,7 +32,7 @@ services:
     build:
       dockerfile: Dockerfile
     restart: unless-stopped
-    command: poetry run python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     container_name: dealscan
     ports:
       - "8000:8000"
@@ -61,7 +61,9 @@ services:
       dockerfile: Dockerfile
     container_name: dealscan-sync
     restart: no
-    command: poetry run python manage.py djstripe_sync_models
+    command: python manage.py djstripe_sync_models
+    env_file:
+      - .env
     depends_on:
       dealscan:
         condition: service_started
@@ -71,7 +73,7 @@ services:
       dockerfile: Dockerfile
     container_name: dealscan-migrations
     restart: no
-    command: poetry run python manage.py migrate --noinput
+    command: python manage.py migrate --noinput
     env_file:
       - .env
     volumes:
