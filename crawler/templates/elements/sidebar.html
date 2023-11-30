@@ -1,85 +1,100 @@
-<div class="basis-0 bg-white justify-start items-start inline-flex">
-  <div class="grow shrink basis-0 self-stretch flex-col justify-between items-start inline-flex">
-    <div class="self-stretch h-[416px] pt-8 flex-col justify-start items-start gap-6 flex">
-      <div class="self-stretch h-8 pl-6 pr-5 flex-col justify-start items-start flex">
-        <div class="justify-start items-start inline-flex">
-          <div class="w-[142px] h-8 justify-center items-start gap-2.5 flex">
-            <div class="shadow justify-start items-start inline-flex">
-              <div class="w-8 h-8 relative bg-gradient-to-b from-white to-gray-300 rounded-lg border border-gray-300">
-                <div class="w-8 h-8 left-0 top-0 absolute"></div>
-                <div class="w-4 h-4 left-[8px] top-[8px] absolute bg-gradient-to-tr from-green-900 to-green-700 rounded-full shadow"></div>
-                <div class="w-8 h-4 left-0 top-[16px] absolute bg-white bg-opacity-20 rounded-bl-lg rounded-br-lg backdrop-blur-[5px]"></div>
+{% load static %}
+
+<div x-data="{ sidebarOpen: true }">
+  <div class="flex flex-col basis-0 bg-white justify-start lg:items-start border-r-2 min-h-screen">
+    <div class="basis-0 bg-white justify-start items-start inline-flex">
+      <div class="grow shrink basis-0 self-stretch flex-col justify-between items-start inline-flex">
+        <div class="self-stretch pt-8 flex-col justify-start items-start gap-6 flex">
+          <div class="self-stretch h-8 pl-6 pr-5 flex" :class="{'justify-center': !sidebarOpen, 'ml-[16px]': sidebarOpen}">
+            <div class="h-8 flex justify-start items-center gap-2.5" :class="{ 'w-[142px]': sidebarOpen }">
+              <div class="flex flex-row gap-4 shadow w-8 h-8 relative bg-gradient-to-b from-white to-gray-300 rounded-lg border border-gray-300">
+                <img src="{% static 'images/logo.png' %}" class="w-7 h-7 flex justify-center items-center" />
+                <span x-show="sidebarOpen" class="self-center">Dealscan.io</span>
+              </div>
+            </div>
+            <div class="flex self-center" :class="{'ml-2': !sidebarOpen}">
+              <button @click="sidebarOpen = !sidebarOpen" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900 flex self-center">
+                <span class="material-symbols-outlined" x-show="sidebarOpen">
+                  chevron_left
+                </span>
+                <span class="material-symbols-outlined" x-show="!sidebarOpen">
+                  chevron_right
+                </span>
+              </button>
+            </div>
+          </div>
+          <div class="self-stretch px-4 flex-col justify-start items-start gap-1 flex">
+            {% with request.resolver_match.url_name as url_name %}
+            {% url 'dashboard' as dashboard_url %}
+              <a href="{{ dashboard_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard' %}bg-gray-50{% else %} bg-white {% endif %} hover:bg-gray-50 rounded-md justify-start items-center gap-2 inline-flex">
+                <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+                  <span class="material-symbols-outlined">home</span>
+                  <div class="{% if url_name == 'home' %} text-gray-800 {% else %} text-slate-700 {% endif %} text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Home</div>
+                </div>
+              </a>
+              {% url 'dashboard_offers' as offers_url %}
+              <a href="{{ offers_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_offers' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
+                <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+                  <span class="material-symbols-outlined">list_alt</span>
+                  <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Offers</div>
+                </div>
+              </a>
+              {% url 'dashboard_notifications' as notifications_url %}
+              <a href="{{ notifications_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_notifications' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
+                <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+                  <span class="material-symbols-outlined">notifications</span>
+                  <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Notifications</div>
+                </div>
+              </a>
+              {% url 'dashboard_billing' as billing_url %}
+              <a href="{{ billing_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_billing' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
+                <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+                  <span class="material-symbols-outlined">credit_card</span>
+                  <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Billing</div>
+                </div>
+              </a>
+              {% url 'account_email' as account_url %}
+              <a href="{{ account_url }}" class="self-stretch px-3 py-2 {% if url_name == 'account_email' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 rounded-md justify-start items-center gap-2 inline-flex">
+                <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+                  <span class="material-symbols-outlined">account_circle</span>
+                  <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Account</div>
+                </div>
+              </a>
+            {% endwith %}
+          </div>
+        </div>
+        <div class="self-stretch h-[392px] px-4 pb-8 flex-col justify-start items-start gap-6 flex">
+          <div class="self-stretch h-[84px] flex-col justify-start items-start gap-1 flex">
+            <div class="self-stretch px-3 py-2 bg-white rounded-md justify-start items-center gap-2 inline-flex">
+              <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+                <span class="material-symbols-outlined">support</span>
+                <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Support</div>
+              </div>
+            </div>
+            <div class="self-stretch px-3 py-2 bg-white rounded-md justify-start items-center gap-2 inline-flex">
+              <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+                <span class="material-symbols-outlined">settings</span>
+                <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Settings</div>
+              </div>
+            </div>
+          </div>
+          <div class="self-stretch pl-2 pr-8 pt-6 border-t border-gray-200 justify-start items-start gap-4 inline-flex">
+            <div class="grow shrink basis-0 h-10 justify-start items-center gap-3 flex" x-show="sidebarOpen">
+              <div class="flex-col justify-start items-start inline-flex">
+                <div class="text-slate-700 text-sm font-semibold font-sans leading-tight">{{ request.user.username }}</div>
+                <div class="text-slate-600 text-sm font-normal font-sans leading-tight">{{ request.user.email }}</div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="self-stretch h-[260px] px-4 flex-col justify-start items-start gap-1 flex">
-        {% with request.resolver_match.url_name as url_name %}
-        {% url 'dashboard' as dashboard_url %}
-          <a href="{{ dashboard_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 rounded-md justify-start items-center gap-2 inline-flex">
-            <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
-              <span class="material-symbols-outlined">home</span>
-              <div class="{% if url_name == 'home' %} text-gray-800 {% else %} text-slate-700 {% endif %} text-base font-semibold font-sans leading-normal">Home</div>
-            </div>
-          </a>
-          {% url 'dashboard_offers' as offers_url %}
-          <a href="{{ offers_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_offers' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
-            <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
-              <span class="material-symbols-outlined">list_alt</span>
-              <div class="text-slate-700 text-base font-semibold font-sans leading-normal">Offers</div>
-            </div>
-          </a>
-          {% url 'dashboard_notifications' as notifications_url %}
-          <a href="{{ notifications_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_notifications' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
-            <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
-              <span class="material-symbols-outlined">notifications</span>
-              <div class="text-slate-700 text-base font-semibold font-sans leading-normal">Notifications</div>
-            </div>
-          </a>
-          {% url 'dashboard_billing' as billing_url %}
-          <a href="{{ billing_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_billing' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
-            <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
-              <span class="material-symbols-outlined">credit_card</span>
-              <div class="text-slate-700 text-base font-semibold font-sans leading-normal">Billing</div>
-            </div>
-          </a>
-          {% url 'account_email' as account_url %}
-          <div class="self-stretch px-3 py-2 {% if url_name == 'account_email' %} bg-gray-50 {% else %} bg-white {% endif %} rounded-md justify-start items-center gap-2 inline-flex">
-            <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
-              <span class="material-symbols-outlined">account_circle</span>
-              <div class="text-slate-700 text-base font-semibold font-sans leading-normal">Account</div>
-            </div>
-          </div>
-        {% endwith %}
-      </div>
-    </div>
-    <div class="self-stretch h-[392px] px-4 pb-8 flex-col justify-start items-start gap-6 flex">
-      <div class="self-stretch h-[84px] flex-col justify-start items-start gap-1 flex">
-        <div class="self-stretch px-3 py-2 bg-white rounded-md justify-start items-center gap-2 inline-flex">
-          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
-            <span class="material-symbols-outlined">support</span>
-            <div class="text-slate-700 text-base font-semibold font-sans leading-normal">Support</div>
-          </div>
-        </div>
-        <div class="self-stretch px-3 py-2 bg-white rounded-md justify-start items-center gap-2 inline-flex">
-          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
-            <span class="material-symbols-outlined">settings</span>
-            <div class="text-slate-700 text-base font-semibold font-sans leading-normal">Settings</div>
-          </div>
-        </div>
-      </div>
-      <div class="self-stretch pl-2 pr-8 pt-6 border-t border-gray-200 justify-start items-start gap-4 inline-flex">
-        <div class="grow shrink basis-0 h-10 justify-start items-center gap-3 flex">
-          <div class="flex-col justify-start items-start inline-flex">
-            <div class="text-slate-700 text-sm font-semibold font-sans leading-tight">{{ request.user.username }}</div>
-            <div class="text-slate-600 text-sm font-normal font-sans leading-tight">{{ request.user.email }}</div>
-          </div>
-        </div>
-        <div class="p-2 rounded-lg justify-center items-center gap-2 flex">
-          <div class="w-5 h-5 relative"></div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
+
+<script>
+  // Alpine.js script to handle responsive sidebar
+  window.addEventListener('resize', () => {
+    Alpine.store('windowWidth', window.innerWidth);
+  });
+</script>
