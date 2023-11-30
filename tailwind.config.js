@@ -3,6 +3,7 @@ module.exports = {
   content: [
       './accounts/templates/**/*.html',
       './dealscan/templates/**/*.html',
+      './crawler/templates/**/*.html',
   ],
   theme: {
     extend: {
