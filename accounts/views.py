@@ -80,8 +80,19 @@ class VerificationEmailSent(EmailVerificationSentView):
 class MyEmailView(EmailView):
     template_name = "email_management.html"
 
+    @staticmethod
+    def _get_primary_email(user):  # TODO?
+        return user.email
+
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["email_verified"] = has_verified_email(self.request.user)
-        context["primary_email"] = self.request.user.email
+        user = self.request.user
+
+        context["email_verified"] = has_verified_email(user)
+        context["primary_email"] = self._get_primary_email(user)
+
+        phone_number = user.phone_number
+        context["user"] = {}
+        context["user"]["phone_number"] = phone_number if phone_number else ""
+        context["user"]["username"] = user.username
         return context
