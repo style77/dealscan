@@ -51,17 +51,16 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     #     return bool(obj.stripe_user.subscription_id) if obj.stripe_user else None
 
 
-APIKeyAdmin.__bases__ = (ModelAdmin,)
-CustomerAdmin.__bases__ = (ModelAdmin,)
-SubscriptionAdmin.__bases__ = (ModelAdmin,)
-ProductAdmin.__bases__ = (ModelAdmin,)
+models_to_override = {
+    APIKeyAdmin: APIKey,
+    CustomerAdmin: Customer,
+    SubscriptionAdmin: Subscription,
+    ProductAdmin: Product,
+}
 
-admin.site.unregister(APIKey)
-admin.site.unregister(Customer)
-admin.site.unregister(Subscription)
-admin.site.unregister(Product)
+for key, value in models_to_override.items():
+    key.__bases__ = (ModelAdmin,)
 
-unfold_admin_site.register(APIKey, APIKeyAdmin)
-unfold_admin_site.register(Customer, CustomerAdmin)
-unfold_admin_site.register(Subscription, SubscriptionAdmin)
-unfold_admin_site.register(Product, ProductAdmin)
+    admin.site.unregister(value)
+
+    unfold_admin_site.register(value, key)
