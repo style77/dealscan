@@ -1,17 +1,29 @@
 {% include 'layouts/dashboard_base.html' %}
 {% load allauth i18n %}
 {% block content %}
-  {% include "snippets/logout_modal.html" %}
-  {% if email_verified %}
-    <div class="p-6 absolute">
-        <div class="pl-1 pr-2.5 py-1 bg-yellow-50 rounded-full border border-yellow-200 justify-start items-center gap-2 inline-flex">
-            <div class="px-2 py-0.5 bg-white rounded-full border border-yellow-200 justify-start items-center flex">
-                <div class="text-center text-green-700 text-xs font-medium font-sans leading-[18px]">{% trans "Note" %}</div>
-            </div>
-            <div class="justify-start items-center gap-1 flex px-2">
-                <div class="text-yellow-700 text-xs font-medium font-sans leading-[18px]">{% trans "Your account is not verified!" %}</div>
-            </div>
+  {% url 'account_email' as email_url %}
+  {% if not email_verified %}
+    <div class="m-4 w-full h-[72px] p-3 bg-green-700 rounded-xl shadow border border-green-500 justify-start items-start inline-flex">
+      <div class="grow shrink basis-0 h-12 justify-start items-center gap-3 flex">
+        <div class="grow shrink basis-0 h-12 justify-start items-center gap-4 flex">
+          <div class="w-12 h-12 p-3 bg-green-500 rounded-[10px] justify-center items-center flex">
+            <span class="material-symbols-outlined w-6 h-6 relative flex-col justify-start items-start flex text-white">mail</span>
+          </div>
+          <div class="grow shrink basis-0 h-6 justify-start items-start gap-1.5 flex">
+            <div class="text-white text-base font-semibold font-sans leading-normal">Your email is unverified!</div>
+            <div class="text-emerald-200 text-base font-normal font-sans leading-normal">Check your inbox or Resend verification email.</div>
+          </div>
         </div>
+        <form class="justify-start items-center gap-2 flex" action="{{ email_url }}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="email" value="{{ primary_email }}">
+          <button type="submit" name="action_send" class="px-4 py-2.5 bg-white rounded-lg shadow border border-emerald-300 justify-center items-center gap-1.5 flex">
+            <div class="px-0.5 justify-center items-center flex">
+              <div class="text-green-700 text-base font-semibold font-sans leading-normal">Resend email</div>
+            </div>
+          </button>
+        </form>
+      </div>
     </div>
   {% endif %}
 {% endblock %}
