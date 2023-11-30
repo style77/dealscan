@@ -28,6 +28,7 @@ flower = "^2.0.1"
 django-widget-tweaks = "^1.5.0"
 dj-stripe = "^2.8.3"
 django-components = "^0.29"
+django-phonenumber-field = {extras = ["phonenumbers"], version = "^7.2.0"}
 
 
 [tool.poetry.group.dev.dependencies]
