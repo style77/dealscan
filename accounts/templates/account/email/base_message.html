@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load account %}
+{% autoescape off %}
+
+{% user_display user as user_display %}
+
+<div class="w-[640px] h-[622px] p-8 bg-white flex-col justify-start items-start inline-flex">
+  <div class="w-14 h-14 p-3.5 rounded-xl shadow border border-gray-200 justify-center items-center inline-flex">
+    <img src="{% static 'images/logo.png' %}" class="w-7 h-7 relative flex-col justify-start items-start flex" />
+  </div>
+  <div class="self-stretch h-[268px] px-6 py-8 bg-white flex-col justify-start items-start gap-6 flex">
+    <div class="self-stretch">
+      <span style="text-slate-600 text-base font-normal font-sans leading-normal">Hi {{ user_display }},<br />{% block header %}{% endblock header %}</span>
+    </div>
+    {% block content %}{% endblock content %}
+    <div class="self-stretch text-slate-600 text-base font-normal font-sans leading-normal">Thanks,<br />Dealscan Team</div>
+  </div>
+  <div class="self-stretch h-[210px] px-6 py-8 bg-white flex-col justify-start items-start gap-12 flex">
+    <div class="self-stretch">
+      <span style="text-slate-600 text-sm font-normal font-sans leading-tight">This email was sent to&nbsp;</span>
+      <span style="text-green-700 text-sm font-normal font-sans underline leading-tight">@{{ user_display }}&nbsp;</span>
+      <span style="text-slate-600 text-sm font-normal font-sans leading-tight">. If you'd rather not receive this kind of email, you can&nbsp;</span>
+      <span style="text-green-700 text-sm font-normal font-sans underline leading-tight">unsubscribe&nbsp;</span>
+      <span style="text-slate-600 text-sm font-normal font-sans leading-tight">or&nbsp;</span>
+      <span style="text-green-700 text-sm font-normal font-sans underline leading-tight">manage your email preferences&nbsp;</span>
+      <span style="text-slate-600 text-sm font-normal font-sans leading-tight">.<br />© 2077 Untitled UI, 100 Smith Street, Melbourne VIC 3000</span>
+    </div>
+    <div class="self-stretch justify-between items-center inline-flex">
+      <div class="justify-start items-start flex">
+        <div class="w-[106.50px] h-6 justify-center items-start gap-[7.50px] flex">
+          <div class="shadow justify-start items-start inline-flex">
+            <div class="w-6 h-6 relative bg-gradient-to-b from-white to-gray-300 rounded-md border border-gray-300">
+              <div class="w-6 h-6 left-0 top-0 absolute"></div>
+              <div class="w-3 h-3 left-[6px] top-[6px] absolute bg-gradient-to-tr from-green-900 to-green-700 rounded-full shadow"></div>
+              <div class="w-6 h-3 left-0 top-[12px] absolute bg-white bg-opacity-20 rounded-bl-md rounded-br-md backdrop-blur-[3.75px]"></div>
+            </div>
+          </div>
+          <div class="grow shrink basis-0 self-stretch pt-[5.81px] pb-[6.58px] justify-center items-center inline-flex"></div>
+        </div>
+      </div>
+      <div class="justify-center items-center gap-4 flex">
+        <div class="w-5 h-5 px-[0.42px] py-[0.83px] justify-center items-center flex"></div>
+        <div class="w-5 h-5 pb-[0.12px] justify-center items-center flex"></div>
+        <div class="w-5 h-5 pr-[0.01px] justify-center items-center flex">
+          <div class="w-5 h-5 relative"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

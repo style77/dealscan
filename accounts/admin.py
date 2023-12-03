@@ -1,3 +1,5 @@
+from allauth.account.admin import EmailAddressAdmin
+from allauth.account.models import EmailAddress
 from django.contrib import admin
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -14,9 +16,6 @@ from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationFo
 
 from accounts.models import User
 from dealscan.sites import unfold_admin_site
-
-from allauth.account.models import EmailAddress
-from allauth.account.admin import EmailAddressAdmin
 
 admin.site.unregister(Group)
 
@@ -59,7 +58,7 @@ models_to_override = {
     CustomerAdmin: Customer,
     SubscriptionAdmin: Subscription,
     ProductAdmin: Product,
-    EmailAddressAdmin: EmailAddress
+    EmailAddressAdmin: EmailAddress,
 }
 
 for key, value in models_to_override.items():

@@ -1,25 +1,29 @@
-from typing import Any, Dict, Type
+from typing import Any, Dict
 
-from allauth.account.utils import has_verified_email
-from allauth.account import signals
+from allauth.account import app_settings, signals
+from allauth.account.adapter import get_adapter
+from allauth.account.decorators import reauthentication_required
+from allauth.account.models import EmailAddress
+from allauth.account.utils import send_email_confirmation, sync_user_email_addresses
 from allauth.account.views import (
+    AjaxCapableProcessFormViewMixin,
     ConfirmEmailView,
     EmailVerificationSentView,
     LoginView,
     PasswordResetDoneView,
     PasswordResetView,
-    EmailView,
     SignupView,
     _ajax_response,
-    AjaxCapableProcessFormViewMixin,
 )
-from django.views.generic import FormView
-from allauth.decorators import rate_limit
-from allauth.account.decorators import reauthentication_required
-from django.utils.decorators import method_decorator
 from allauth.core import ratelimit
+from allauth.decorators import rate_limit
+from django.contrib import messages
+from django.core.validators import validate_email
+from django.forms import ValidationError
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.generic import FormView
 
 from accounts.forms import (
     AccountForm,
@@ -27,15 +31,6 @@ from accounts.forms import (
     CustomResetPasswordForm,
     CustomSignupForm,
 )
-from django.core.validators import validate_email
-from django.forms import ValidationError
-from allauth.account.models import EmailAddress
-from allauth.account.utils import send_email_confirmation, sync_user_email_addresses
-
-from allauth.account.adapter import get_adapter
-from django.contrib import messages
-
-from allauth.account import app_settings
 
 
 class MySignupView(SignupView):
@@ -141,9 +136,7 @@ class MyEmailView(AjaxCapableProcessFormViewMixin, FormView):
         context.update(
             {
                 "new_emailaddress": EmailAddress.objects.get_new(user),
-                "current_emailaddress": EmailAddress.objects.get_verified(
-                    user
-                ),
+                "current_emailaddress": EmailAddress.objects.get_verified(user),
             }
         )
 
