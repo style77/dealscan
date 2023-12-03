@@ -16,7 +16,7 @@ urlpatterns = [
     path(r"login/", MyLoginView.as_view(), name="account_login"),
     path(r"signup/", MySignupView.as_view(), name="account_signup"),
     path("logout/", LogoutView.as_view(), name="account_logout"),
-    path("email/", login_required(MyEmailView.as_view()), name="account_email"),
+    path("", login_required(MyEmailView.as_view()), name="account"),
     path(
         "confirm-email/",
         VerificationEmailSent.as_view(),
