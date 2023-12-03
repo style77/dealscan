@@ -4,6 +4,7 @@ module.exports = {
       './accounts/templates/**/*.html',
       './dealscan/templates/**/*.html',
       './crawler/templates/**/*.html',
+      './poll/templates/**/*.html',
   ],
   theme: {
     extend: {
