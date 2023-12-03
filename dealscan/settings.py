@@ -45,7 +45,7 @@ DEFAULT_APPS = [
 
 AUTH_APPS = ["allauth", "allauth.account", "allauth.socialaccount"]
 
-CORE_APPS = ["accounts", "crawler"]
+CORE_APPS = ["accounts", "crawler", "poll"]
 
 THIRD_PARTY_APPS = [
     "simple_history",
@@ -92,6 +92,7 @@ TEMPLATES = [
                 os.path.join(BASE_DIR, "accounts", "templates", "allauth", "account")
             ),
             os.path.normpath(os.path.join(BASE_DIR, "crawler", "templates")),
+            os.path.normpath(os.path.join(BASE_DIR, "poll", "templates")),
         ],
         "OPTIONS": {
             "context_processors": [
@@ -361,6 +362,22 @@ UNFOLD = {
                     },
                 ],
             },
+            {
+                "title": _("Polls"),
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Polls"),
+                        "icon": "quiz",
+                        "link": reverse_lazy("admin:poll_poll_changelist")
+                    },
+                    {
+                        "title": _("Answers"),
+                        "icon": "how_to_vote",
+                        "link": reverse_lazy("admin:poll_pollanswer_changelist")
+                    }
+                ]
+            }
         ],
     },
     "COLORS": {
