@@ -10,6 +10,7 @@ from allauth.account.models import EmailAddress
 from dataclasses import dataclass
 from typing import Optional
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 
 SIGNUP_INPUT_CLASS = "self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-gray-300 h-6 justify-start items-center gap-2 inline-flex grow shrink basis-0 text-gray-500 text-base font-normal font-sans leading-normal"
 
@@ -177,9 +178,11 @@ class AccountForm(AddEmailForm):
 
             if self.user.username != self.cleaned_data["username"]:
                 self.user.username = self.cleaned_data["username"]
+                messages.success(request, "Updated username.")
 
             if self.user.phone_number != self.cleaned_data["phone"]:
                 self.user.phone_number = self.cleaned_data["phone"]
+                messages.success(request, "Updated phone number.")
 
             self.user.save()
 

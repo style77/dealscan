@@ -156,6 +156,30 @@
       <form action="{{ email_url }}" method="post" class="self-stretch px-8 flex-col justify-start items-start gap-6 flex">
         {% csrf_token %}
         <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+          {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <div class="p-4 bg-white rounded-xl shadow border border-gray-300 justify-start items-start gap-4 inline-flex">
+                  <div class="w-5 h-5 relative rounded-full">
+                    <div class="w-[26.67px] h-[26.67px] left-[-3.33px] top-[-3.33px] absolute opacity-30 rounded-2xl border-2 border-emerald-600"></div>
+                    <div class="w-[35px] h-[35px] left-[-7.50px] top-[-7.50px] absolute opacity-10 rounded-2xl border-2 border-emerald-600"></div>
+                    <div class="w-5 h-5 left-0 top-0 absolute"></div>
+                  </div>
+                  <div class="grow shrink basis-0 flex-col justify-start items-start gap-3 inline-flex">
+                    <div class="self-stretch h-11 flex-col justify-start items-start gap-1 flex">
+                      <div class="self-stretch pr-8 justify-start items-start gap-2 inline-flex">
+                        <div class="grow shrink basis-0 text-slate-700 text-sm font-semibold font-sans leading-tight capitalize">{{ message.tags }}</div>
+                      </div>
+                      <div class="self-stretch text-slate-600 text-sm font-normal font-sans leading-tight">{{ message }}</div>
+                    </div>
+                  </div>
+                  <div class="w-9 h-9 p-2 rounded-lg justify-center items-center flex">
+                    <div class="w-5 h-5 relative"></div>
+                  </div>
+                </div>
+                {% endfor %}
+            </ul>
+          {% endif %}
           <div class="self-stretch justify-start items-start gap-4 inline-flex flex-col lg:flex-row">
             <div class="grow shrink basis-0 self-stretch flex-col justify-center items-start gap-1 inline-flex">
               <div class="self-stretch text-gray-900 text-lg font-semibold font-sans leading-7">Personal info</div>
