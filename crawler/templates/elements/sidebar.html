@@ -24,35 +24,35 @@
       {% with request.resolver_match.url_name as url_name %}
       {% url 'dashboard' as dashboard_url %}
         <a href="{{ dashboard_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard' %}bg-gray-50{% else %} bg-white {% endif %} hover:bg-gray-50 rounded-md justify-start items-center gap-2 inline-flex">
-          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex" :class="{'justify-center': !sidebarOpen}">
             <span class="material-symbols-outlined">home</span>
             <div class="{% if url_name == 'home' %} text-gray-800 {% else %} text-slate-700 {% endif %} text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Home</div>
           </div>
         </a>
         {% url 'dashboard_offers' as offers_url %}
         <a href="{{ offers_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_offers' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
-          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex" :class="{'justify-center': !sidebarOpen}">
             <span class="material-symbols-outlined">list_alt</span>
             <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Offers</div>
           </div>
         </a>
         {% url 'dashboard_notifications' as notifications_url %}
         <a href="{{ notifications_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_notifications' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
-          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex" :class="{'justify-center': !sidebarOpen}">
             <span class="material-symbols-outlined">notifications</span>
             <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Notifications</div>
           </div>
         </a>
         {% url 'dashboard_billing' as billing_url %}
         <a href="{{ billing_url }}" class="self-stretch px-3 py-2 {% if url_name == 'dashboard_billing' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 transition rounded-md justify-start items-center gap-2 inline-flex">
-          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex" :class="{'justify-center': !sidebarOpen}">
             <span class="material-symbols-outlined">credit_card</span>
             <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Billing</div>
           </div>
         </a>
-        {% url 'account_email' as account_url %}
-        <a href="{{ account_url }}" class="self-stretch px-3 py-2 {% if url_name == 'account_email' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 rounded-md justify-start items-center gap-2 inline-flex">
-          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+        {% url 'account' as account_url %}
+        <a href="{{ account_url }}" class="self-stretch px-3 py-2 {% if url_name == 'account' %} bg-gray-50 {% else %} bg-white {% endif %} hover:bg-gray-50 rounded-md justify-start items-center gap-2 inline-flex">
+          <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex" :class="{'justify-center': !sidebarOpen}">
             <span class="material-symbols-outlined">account_circle</span>
             <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Account</div>
           </div>
@@ -63,20 +63,20 @@
   <div class="self-stretch px-4 pb-8 flex-col justify-start items-start gap-6 flex">
     <div class="self-stretch h-[84px] flex-col justify-start items-start gap-1 flex">
       <div class="self-stretch px-3 py-2 bg-white rounded-md justify-start items-center gap-2 inline-flex">
-        <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+        <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex" :class="{'justify-center': !sidebarOpen}">
           <span class="material-symbols-outlined">support</span>
           <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Support</div>
         </div>
       </div>
       <div class="self-stretch px-3 py-2 bg-white rounded-md justify-start items-center gap-2 inline-flex">
-        <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex">
+        <div class="grow shrink basis-0 h-6 justify-start items-center gap-3 flex" :class="{'justify-center': !sidebarOpen}">
           <span class="material-symbols-outlined">settings</span>
           <div class="text-slate-700 text-base font-semibold font-sans leading-normal" x-show="sidebarOpen">Settings</div>
         </div>
       </div>
     </div>
     <div class="self-stretch pl-2 pr-8 pt-6 border-t border-gray-200 justify-start items-start gap-4 inline-flex">
-      <div class="grow shrink basis-0 h-10 justify-start items-center flex" :class="{'gap-1': !sidebarOpen, 'gap-3': sidebarOpen}">
+      <div class="grow shrink basis-0 h-10 justify-start items-center flex" :class="{'gap-1 justify-center': !sidebarOpen, 'gap-3': sidebarOpen}">
         <span class="material-symbols-outlined">
           account_circle
         </span>
