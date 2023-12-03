@@ -1,19 +1,41 @@
-from typing import Any
+from typing import Any, Dict, Type
 
 from allauth.account.utils import has_verified_email
+from allauth.account import signals
 from allauth.account.views import (
     ConfirmEmailView,
     EmailVerificationSentView,
-    EmailView,
     LoginView,
     PasswordResetDoneView,
     PasswordResetView,
+    EmailView,
     SignupView,
+    _ajax_response,
+    AjaxCapableProcessFormViewMixin,
 )
+from django.views.generic import FormView
+from allauth.decorators import rate_limit
+from allauth.account.decorators import reauthentication_required
+from django.utils.decorators import method_decorator
 from allauth.core import ratelimit
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
-from accounts.forms import CustomLoginForm, CustomResetPasswordForm, CustomSignupForm
+from accounts.forms import (
+    AccountForm,
+    CustomLoginForm,
+    CustomResetPasswordForm,
+    CustomSignupForm,
+)
+from django.core.validators import validate_email
+from django.forms import ValidationError
+from allauth.account.models import EmailAddress
+from allauth.account.utils import send_email_confirmation, sync_user_email_addresses
+
+from allauth.account.adapter import get_adapter
+from django.contrib import messages
+
+from allauth.account import app_settings
 
 
 class MySignupView(SignupView):
@@ -77,22 +99,106 @@ class VerificationEmailSent(EmailVerificationSentView):
     template_name = "verification_sent.html"
 
 
-class MyEmailView(EmailView):
-    template_name = "email_management.html"
+@method_decorator(rate_limit(action="manage_email"), name="dispatch")
+@method_decorator(
+    reauthentication_required(
+        allow_get=True, enabled=lambda request: app_settings.REAUTHENTICATION_REQUIRED
+    ),
+    name="dispatch",
+)
+class MyEmailView(AjaxCapableProcessFormViewMixin, FormView):
+    template_name = "management.html"
+    form_class = AccountForm
+    success_url = reverse_lazy("account")
 
-    @staticmethod
-    def _get_primary_email(user):  # TODO?
-        return user.email
+    def get_form_class(self) -> type:
+        return self.form_class
+
+    def dispatch(self, request, *args, **kwargs):
+        sync_user_email_addresses(request.user)
+        return super(MyEmailView, self).dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(MyEmailView, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_initial(self) -> Dict[str, Any]:
+        user = self.request.user
+        initial = {
+            "username": user.username,
+            "email": EmailAddress.objects.get_verified(user),
+            "phone": user.phone_number,
+        }
+        self.initial.update(initial)
+
+        return super().get_initial()
 
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         user = self.request.user
 
-        context["email_verified"] = has_verified_email(user)
-        context["primary_email"] = self._get_primary_email(user)
+        context.update(
+            {
+                "new_emailaddress": EmailAddress.objects.get_new(self.request.user),
+                "current_emailaddress": EmailAddress.objects.get_verified(
+                    self.request.user
+                ),
+            }
+        )
 
-        phone_number = user.phone_number
-        context["user"] = {}
-        context["user"]["phone_number"] = phone_number if phone_number else ""
-        context["user"]["username"] = user.username
         return context
+
+    def form_valid(self, form):
+        changes = form.save(self.request)
+
+        if changes and changes.email_changed:
+            get_adapter(self.request).add_message(
+                self.request,
+                messages.INFO,
+                "account/messages/email_confirmation_sent.html",
+                {"email": form.cleaned_data["email"]},
+            )
+            signals.email_added.send(
+                sender=self.request.user.__class__,
+                request=self.request,
+                user=self.request.user,
+                email_address=changes.email_address,
+            )
+        return super(MyEmailView, self).form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        res = None
+        if request.POST.get("email") and "action_send" in request.POST:
+            res = self._resend_verification(request)
+        elif "action_edit" in request.POST:
+            form = self.get_form()
+            if form.is_valid():  # TODO WHY IS FORM NOT CALLED BY ITSELF?
+                return self.form_valid(form)
+            else:
+                return self.form_invalid(form)
+        else:
+            res = HttpResponseRedirect(self.success_url)
+            return _ajax_response(request, res, data=self._get_ajax_data_if())
+
+        res = res or HttpResponseRedirect(self.get_success_url())
+        res = _ajax_response(request, res, data=self._get_ajax_data_if())
+        return res
+
+    def _get_email_address(self, request):
+        email = request.POST["email"]
+        try:
+            validate_email(email)
+        except ValidationError:
+            return None
+        try:
+            return EmailAddress.objects.get_for_user(user=request.user, email=email)
+        except EmailAddress.DoesNotExist:
+            pass
+
+    def _resend_verification(self, request, *args, **kwargs):
+        email_address = self._get_email_address(request)
+        if email_address:
+            send_email_confirmation(
+                self.request, request.user, email=email_address.email
+            )
