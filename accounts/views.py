@@ -140,9 +140,9 @@ class MyEmailView(AjaxCapableProcessFormViewMixin, FormView):
 
         context.update(
             {
-                "new_emailaddress": EmailAddress.objects.get_new(self.request.user),
+                "new_emailaddress": EmailAddress.objects.get_new(user),
                 "current_emailaddress": EmailAddress.objects.get_verified(
-                    self.request.user
+                    user
                 ),
             }
         )
