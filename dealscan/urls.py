@@ -12,6 +12,7 @@ urlpatterns = (
         path("admin/", unfold_admin_site.urls),
         path("accounts/", include("accounts.urls")),
         path("payments/", include("djstripe.urls", namespace="payments")),
+        path("polls/", include("polls.urls")),
         path("", include("crawler.urls")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
