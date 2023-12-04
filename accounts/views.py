@@ -13,6 +13,8 @@ from allauth.account.views import (
     PasswordResetDoneView,
     PasswordResetView,
     SignupView,
+    PasswordResetFromKeyView,
+    PasswordResetFromKeyDoneView,
     _ajax_response,
 )
 from allauth.core import ratelimit
@@ -30,6 +32,7 @@ from accounts.forms import (
     CustomLoginForm,
     CustomResetPasswordForm,
     CustomSignupForm,
+    CustomResetPasswordKeyForm,
 )
 
 
@@ -195,3 +198,19 @@ class MyEmailView(AjaxCapableProcessFormViewMixin, FormView):
             send_email_confirmation(
                 self.request, request.user, email=email_address.email
             )
+
+
+class MyPasswordResetFromKeyView(PasswordResetFromKeyView):
+    template_name = "password_reset_from_key.html"
+    form_class = CustomResetPasswordKeyForm
+
+    def form_valid(self, form):
+        print("valid")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+
+class MyPasswordResetFromKeyDoneView(PasswordResetFromKeyDoneView):
+    template_name = "password_reset_from_key_done.html"
