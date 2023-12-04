@@ -171,9 +171,9 @@ class Crawler(BaseCrawler):
                 data["Skrzynia biegów"]
             ],
             drive=data.get("Napęd"),
-            damaged=self._to_bool(data["Uszkodzony"])
-            if data.get("Uszkodzony")
-            else None,
+            damaged=self._get_map_option(
+                data, "Uszkodzony", self._to_bool, None
+            ),
             body=constants.BODY_CHOICES_MAP.get(data["Typ nadwozia"], "other"),
             price=Money(float(data["price"]), data["currency"]),  # type: ignore
             VIN=data.get("VIN"),
