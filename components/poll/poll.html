@@ -1,0 +1,77 @@
+<div class="fixed bottom-4 right-4 z-50 hidden lg:block" x-data="{'error': null, 'answerSubmitted': false, 'closePoll': false}" x-show="!closePoll" x-transition.duration.300ms>
+  <div class="bg-white shadow-md border-2 rounded-xl p-4 w-[356px]">
+    <div class="mb-2 flex flex-col">
+      <div class="flex flex-row justify-between">
+        <h3 class="text-md font-semibold">{{ poll.label }}</h3>
+        <button class="material-symbols-outlined hover:text-slate-400 transition ease-in-out duration-300 self-start" @click="closePoll=true">
+          close
+          </button>
+      </div>
+      <p class="text-sm font-light text-slate-700" x-show="!answerSubmitted">{{ poll.description }}</p>
+    </div>
+    <div class="flex flex-col space-y-2" x-show="!answerSubmitted">
+      {% csrf_token %}
+      {% for answer in poll.default_answers %}
+        <button @click="const data = await submitAnswer('{{answer}}'); if (data.status === 'error') {
+          error = data.message
+        } else {
+          answerSubmitted = true
+          setInterval(() => {
+            closePoll = true
+          }, 5000)
+        }" data-answer="{{ answer }}" class="h-8 px-2.5 py-2.5 bg-white hover:bg-gray-100 transition duration-300 rounded-lg shadow border border-gray-300 justify-center items-center gap-1 inline-flex">
+          <div class="px-0.5 justify-center items-center flex">
+            <div class="text-slate-700 text-sm font-semibold font-sans leading-tight">{{ answer }}</div>
+          </div>
+        </button>
+      {% endfor %}
+      {% if poll.allow_custom_answer %}
+        <div class="w-80 flex-col justify-start items-start gap-1.5 inline-flex">
+          <div class="self-stretch flex-col justify-start items-start gap-1.5 flex" x-data="{ customAnswer: '' }">
+            <div class="text-slate-700 text-sm font-medium font-sans leading-tight">{% trans "Custom answer" %}</div>
+            <span class="text-red-500 text-xs" x-text="error" x-show="error">
+            </span>
+            <input required maxlength="120" x-model="customAnswer" @keyup.enter="const data = await submitAnswer(customAnswer); if (data.status === 'error') {
+              error = data.message
+            } else {
+              answerSubmitted = true
+              setInterval(() => {
+                closePoll = true
+              }, 5000)
+            }" placeholder="{{ poll.label }}" class="h-8 text-sm grow shrink basis-0 text-gray-500 font-normal font-sans leading-normal justify-start items-center gap-2 flex self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-gray-300"/>
+          </div>
+          <div class="self-stretch text-slate-600 text-sm font-normal font-sans leading-tight">{% trans "Press" %} <kbd class="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg">Enter</kbd> {% trans "to send your custom answer or choose one of answers above." %}</div>
+        </div>
+      {% endif %}
+    </div>
+    <div class="flex flex-col justify-center items-center py-12" x-show="answerSubmitted" x-transition.duration.700ms>
+      <span class="material-symbols-outlined text-green-600" style="font-size: 64px !important;">
+        handshake
+      </span>
+      <span>
+        Thank you for making Dealscan better.
+      </span>
+    </div>
+  </div>
+</div>
+{% url "submit-answer" as submit_answer_url %}
+<script>
+  async function submitAnswer(answer) {
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    const res = await fetch("{{ submit_answer_url }}", {
+      method: "post",
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrfToken
+      },
+      body: JSON.stringify({
+        poll_id: "{{ poll.id }}",
+        answer: answer
+      })
+    })
+
+    const data = await res.json()
+
+    return data
+  }
+</script>
