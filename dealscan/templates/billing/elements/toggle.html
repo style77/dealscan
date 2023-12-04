@@ -1,17 +1,10 @@
 {% load i18n %}
 
-<div class="justify-start items-center gap-3 inline-flex">
-  <label class="relative inline-flex items-center cursor-pointer">
-    <input type="checkbox" x-on:click="yearPlan = ! yearPlan" class="sr-only peer" />
-    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
-  </label>
-  <div class="flex-col justify-start items-center gap-0.5 inline-flex w-48">
-    <div x-show="yearPlan">
-      <span style="text-indigo-900 text-base font-medium font-sans leading-normal">Annual pricing</span>
-      <span style="text-green-700 text-base font-medium font-sans leading-normal">(save 20%)</span>
-    </div>
-    <div x-show="!yearPlan">
-      <span style="text-indigo-900 text-base font-medium font-sans leading-normal">Monthly pricing</span>
-    </div>
+<div class="w-[287px] h-14 p-1.5 bg-gray-50 rounded-lg border border-gray-200 justify-start items-center gap-2 inline-flex">
+  <div class="w-[138px] px-3 py-2 rounded-md justify-center items-center gap-2 flex cursor-pointer hover:bg-white transition" @click="yearPlan = false" :class="{'bg-white shadow': !yearPlan}">
+    <div class="text-slate-700 text-base font-semibold font-sans leading-normal transition" :class="{'text-gray-500': yearPlan, 'text-slate-700': !yearPlan}">{% trans "Monthly billing" %}</div>
+  </div>
+  <div class="w-[129px] px-3 py-2 rounded-md justify-center items-center gap-2 flex cursor-pointer hover:bg-white transition" @click="yearPlan = true" :class="{'bg-white shadow': yearPlan}">
+    <div class="text-gray-500 text-base font-semibold font-sans leading-normal transition" :class="{'text-gray-500': !yearPlan, 'text-slate-700': yearPlan}">{% trans "Annual billing" %}</div>
   </div>
 </div>
