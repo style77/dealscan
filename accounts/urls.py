@@ -7,11 +7,11 @@ from accounts.views import (
     MyEmailView,
     MyLoginView,
     MyPasswordResetDoneView,
+    MyPasswordResetFromKeyDoneView,
+    MyPasswordResetFromKeyView,
     MyPasswordResetView,
     MySignupView,
     VerificationEmailSent,
-    MyPasswordResetFromKeyView,
-    MyPasswordResetFromKeyDoneView
 )
 
 urlpatterns = [

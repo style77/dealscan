@@ -1,5 +1,7 @@
 from django_components import component
+
 from polls.models import Poll as PollModel
+
 
 @component.register("poll")
 class Poll(component.Component):
@@ -7,9 +9,7 @@ class Poll(component.Component):
 
     def get_context_data(self, selected_poll_id):
         poll_obj = PollModel.objects.get(id=selected_poll_id)
-        return {
-            "poll": poll_obj
-        }
+        return {"poll": poll_obj}
 
     class Media:
         css = [

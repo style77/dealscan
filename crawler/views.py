@@ -1,30 +1,25 @@
 import random
 from typing import Any, Dict, Optional
-from django import http
 
+from django import http
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Subquery
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
-from djstripe.models import Customer
+from djstripe.models import Customer, Product
 
-from django.contrib.auth import get_user_model
-from django.db.models import Subquery
-
-from django.conf import settings
 from crawler.models import Offer
-
 from polls.models import Poll, PollAnswer
-from djstripe.models import Product
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import QueryDict
 
 LOGIN_URL = reverse_lazy("account_login")
 User = get_user_model()
 
 
 class BaseTemplateView(TemplateView):
-    def _find_poll(self, user: User) -> Optional[Poll]:
+    def _find_poll(self, user) -> Optional[Poll]:
         answered_polls = PollAnswer.objects.filter(user=user).values("poll_id")
         unanswered_polls = Poll.objects.exclude(id__in=Subquery(answered_polls))
         if not unanswered_polls:
@@ -45,7 +40,7 @@ class BaseTemplateView(TemplateView):
 class DashboardView(BaseTemplateView):
     template_name = "dashboard.html"
 
-    def _find_poll(self, user: User) -> Optional[Poll]:
+    def _find_poll(self, user) -> Optional[Poll]:
         answered_polls = PollAnswer.objects.filter(user=user).values("poll_id")
         unanswered_polls = Poll.objects.exclude(id__in=Subquery(answered_polls))
         if not unanswered_polls:
@@ -82,12 +77,14 @@ class OfferComponentView(TemplateView):
         filter_params = self.request.GET
         filtered_offers = base_queryset
 
-        all_filter_params = ['model__make', 'model']
+        all_filter_params = ["model__make", "model"]
         for param in all_filter_params:
             if param in filter_params:
-                filtered_offers = filtered_offers.filter(**{param: filter_params[param]})
+                filtered_offers = filtered_offers.filter(
+                    **{param: filter_params[param]}
+                )
 
-        limit = filter_params.get('limit', 40)
+        limit = filter_params.get("limit", 40)
         if limit < 10:
             limit = 10
         elif limit > 150:
@@ -95,7 +92,7 @@ class OfferComponentView(TemplateView):
 
         paginator = Paginator(filtered_offers.order_by("-publication_date"), limit)
 
-        page = self.request.GET.get('page')
+        page = self.request.GET.get("page")
         try:
             offers = paginator.page(page)
         except PageNotAnInteger:

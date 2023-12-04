@@ -1,6 +1,6 @@
 from django.urls import path
 
-from crawler.views import billing_view, dashboard_view, offers_view, all_offers_view
+from crawler.views import all_offers_view, billing_view, dashboard_view, offers_view
 
 urlpatterns = [
     path("dashboard/", dashboard_view, name="dashboard"),

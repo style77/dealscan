@@ -93,7 +93,9 @@ class OfferMetadata(models.Model):
     co2_emission = models.PositiveSmallIntegerField(
         _("co2 emission"), blank=True, null=True
     )
-    doors_count = models.PositiveSmallIntegerField(_("doors count"), blank=True, null=True)
+    doors_count = models.PositiveSmallIntegerField(
+        _("doors count"), blank=True, null=True
+    )
     seats_count = models.PositiveSmallIntegerField(
         _("seats count"), blank=True, null=True
     )
@@ -152,7 +154,9 @@ class Offer(models.Model):  # type: ignore[django-manager-missing]
 
     title = models.CharField(_("title"), max_length=1024)
     url = models.URLField(_("url"), unique=True)
-    image_url = models.URLField(_("image_url"), unique=True, null=True, blank=True, max_length=2048)
+    image_url = models.URLField(
+        _("image_url"), unique=True, null=True, blank=True, max_length=2048
+    )
     publication_date = models.DateTimeField(
         _("publication_date"),
     )
@@ -165,7 +169,9 @@ class Offer(models.Model):  # type: ignore[django-manager-missing]
 
     production_year = models.PositiveSmallIntegerField(_("production year"))
     mileage = models.PositiveIntegerField(_("mileage"))
-    displacement = models.PositiveSmallIntegerField(_("engine displacement"), blank=True, null=True)
+    displacement = models.PositiveSmallIntegerField(
+        _("engine displacement"), blank=True, null=True
+    )
 
     fuel = models.CharField(_("fuel type"), choices=FUEL_CHOICES)
     transmission = models.CharField(_("transmission"), choices=TRANSMISSION_CHOICES)

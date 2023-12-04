@@ -11,10 +11,10 @@ from allauth.account.views import (
     EmailVerificationSentView,
     LoginView,
     PasswordResetDoneView,
+    PasswordResetFromKeyDoneView,
+    PasswordResetFromKeyView,
     PasswordResetView,
     SignupView,
-    PasswordResetFromKeyView,
-    PasswordResetFromKeyDoneView,
     _ajax_response,
 )
 from allauth.core import ratelimit
@@ -31,8 +31,8 @@ from accounts.forms import (
     AccountForm,
     CustomLoginForm,
     CustomResetPasswordForm,
-    CustomSignupForm,
     CustomResetPasswordKeyForm,
+    CustomSignupForm,
 )
 
 
@@ -123,6 +123,9 @@ class MyEmailView(AjaxCapableProcessFormViewMixin, FormView):
 
     def get_initial(self) -> Dict[str, Any]:
         user = self.request.user
+        if not user.is_authenticated:
+            return super().get_initial()
+
         initial = {
             "username": user.username,
             "email": EmailAddress.objects.get_verified(user),

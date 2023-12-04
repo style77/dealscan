@@ -1,7 +1,7 @@
-import time
 import re
+import time
 from datetime import datetime
-from typing import Dict, List, Union
+from typing import Callable, Dict, List, Union
 
 from django.utils import timezone
 from djmoney.money import Money
@@ -9,18 +9,17 @@ from djmoney.money import Money
 from crawler.formatters.formatter import BaseCrawler
 from crawler.models import CarMake, CarModel, Offer, OfferMetadata
 
-
 from . import constants
 
 
 class Crawler(BaseCrawler):
     @staticmethod
     def _find_image_url(summary: str):
-        pattern = r'https?://[^\s]+'
+        pattern = r"https?://[^\s]+"
 
         urls = re.findall(pattern, summary)
 
-        image_urls = [url for url in urls if 'image' in url]
+        image_urls = [url for url in urls if "image" in url]
 
         if image_urls:
             return image_urls[0][:-1]
@@ -72,7 +71,7 @@ class Crawler(BaseCrawler):
 
     @staticmethod
     def _get_map_option(
-        data, key, converter: Union[dict, callable], default_value=None
+        data, key, converter: Union[dict, Callable], default_value=None
     ):
         if isinstance(converter, dict):
             return converter.get(data[key]) if data.get(key) else default_value
@@ -102,7 +101,7 @@ class Crawler(BaseCrawler):
             frd = data["Data pierwszej rejestracji w historii pojazdu"]
             frd_split = frd.split(" ")
             if len(frd_split) == 2:
-                frd_split.insert(0, '1')
+                frd_split.insert(0, "1")
             day = frd_split[0]
             month = constants.MONTH_TRANSLATION_MAP.get(frd_split[1].lower(), 2)
             year = frd_split[2]
@@ -193,7 +192,7 @@ class Crawler(BaseCrawler):
                     break
                 offer = self.format_data(data)
                 offers.append(offer)
-            except Exception as e:
+            except Exception:
                 continue
 
         return offers

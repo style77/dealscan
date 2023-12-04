@@ -1,10 +1,9 @@
 from typing import Any
 
 from django.core.management.base import BaseCommand
+from django.db import IntegrityError, transaction
 
-from crawler.models import Offer, OfferMetadata
 from crawler.utils import update_feeds
-from django.db import transaction, IntegrityError
 
 
 class Command(BaseCommand):

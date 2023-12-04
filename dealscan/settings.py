@@ -230,7 +230,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "accounts" / "static",
     BASE_DIR / "dealscan" / "static",
-    BASE_DIR / "components"
+    BASE_DIR / "components",
 ]
 
 
@@ -370,15 +370,15 @@ UNFOLD = {
                     {
                         "title": _("Polls"),
                         "icon": "quiz",
-                        "link": reverse_lazy("admin:polls_poll_changelist")
+                        "link": reverse_lazy("admin:polls_poll_changelist"),
                     },
                     {
                         "title": _("Answers"),
                         "icon": "how_to_vote",
-                        "link": reverse_lazy("admin:polls_pollanswer_changelist")
-                    }
-                ]
-            }
+                        "link": reverse_lazy("admin:polls_pollanswer_changelist"),
+                    },
+                ],
+            },
         ],
     },
     "COLORS": {

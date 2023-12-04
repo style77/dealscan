@@ -5,8 +5,8 @@ from allauth.account.forms import (
     AddEmailForm,
     LoginForm,
     ResetPasswordForm,
+    ResetPasswordKeyForm,
     SignupForm,
-    ResetPasswordKeyForm
 )
 from allauth.account.models import EmailAddress
 from django import forms
@@ -201,14 +201,18 @@ class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
     def __init__(self, *args, **kwargs):
         super(CustomResetPasswordKeyForm, self).__init__(*args, **kwargs)
 
-        self.fields['password1'].label = _("Password")
-        self.fields['password1'].widget.attrs.update({
-            'class': self.PASSWORD_INPUT_CLASS,
-            'placeholder': '••••••••',
-        })
+        self.fields["password1"].label = _("Password")
+        self.fields["password1"].widget.attrs.update(
+            {
+                "class": self.PASSWORD_INPUT_CLASS,
+                "placeholder": "••••••••",
+            }
+        )
 
-        self.fields['password2'].label = _("Confirm password")
-        self.fields['password2'].widget.attrs.update({
-            'class': self.PASSWORD_INPUT_CLASS,
-            'placeholder': '••••••••',
-        })
+        self.fields["password2"].label = _("Confirm password")
+        self.fields["password2"].widget.attrs.update(
+            {
+                "class": self.PASSWORD_INPUT_CLASS,
+                "placeholder": "••••••••",
+            }
+        )
