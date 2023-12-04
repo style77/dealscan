@@ -10,6 +10,8 @@ from accounts.views import (
     MyPasswordResetView,
     MySignupView,
     VerificationEmailSent,
+    MyPasswordResetFromKeyView,
+    MyPasswordResetFromKeyDoneView
 )
 
 urlpatterns = [
@@ -34,5 +36,15 @@ urlpatterns = [
         r"password/reset/done/",
         MyPasswordResetDoneView.as_view(),
         name="account_reset_password_done",
+    ),
+    re_path(
+        r"^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$",
+        MyPasswordResetFromKeyView.as_view(),
+        name="account_reset_password_from_key",
+    ),
+    path(
+        "password/reset/key/done/",
+        MyPasswordResetFromKeyDoneView.as_view(),
+        name="account_reset_password_from_key_done",
     ),
 ]
