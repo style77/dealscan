@@ -1,3 +1,6 @@
 {% include 'layouts/dashboard_base.html' %}
 {% block content %}
+    {% if poll_id is not None %}
+        {% component "poll" selected_poll_id=poll_id %}
+    {% endif %}
 {% endblock %}
