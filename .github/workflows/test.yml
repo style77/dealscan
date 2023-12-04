@@ -1,4 +1,4 @@
-name: Dealscan styling check
+name: Styling check
 
 on:
     push:
