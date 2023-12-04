@@ -169,13 +169,13 @@ class Crawler(BaseCrawler):
             fuel=constants.FUEL_CHOICES_MAP.get(data["Rodzaj paliwa"], "other"),
             transmission=constants.TRANSMISSION_CHOICES_MAP[
                 data["Skrzynia biegów"]
-            ],  # 162
+            ],
             drive=data.get("Napęd"),
             damaged=self._to_bool(data["Uszkodzony"])
             if data.get("Uszkodzony")
             else None,
             body=constants.BODY_CHOICES_MAP.get(data["Typ nadwozia"], "other"),
-            price=Money(float(data["price"]), data["currency"]),
+            price=Money(float(data["price"]), data["currency"]),  # type: ignore
             VIN=data.get("VIN"),
             is_imported=self._to_bool(data["Importowany"]),
         )
