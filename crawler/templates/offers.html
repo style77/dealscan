@@ -1,0 +1,21 @@
+{% include 'layouts/dashboard_base.html' %}
+{% block content %}
+<div class="w-full min-h-screen p-4 gap-4 flex flex-col">
+    {% include "allauth/account/snippets/email_unverified.html" %}
+    {% if poll_id is not None %}
+        {% component "poll" selected_poll_id=poll_id %}
+    {% endif %}
+    <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+        <div class="self-stretch justify-start items-start gap-4 inline-flex">
+            <div class="grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
+                <div class="self-stretch text-gray-900 text-3xl font-semibold font-sans leading-[38px]">{% trans "Offers" %}</div>
+                <div class="self-stretch text-slate-600 text-md font-regular font-sans leading-[12px]">{% trans "List of offers from all sites. Refreshed every 5 seconds." %}</div>
+            </div>
+        </div>
+    </div>
+    {% url 'dashboard_all_offers' as all_offers_url %}
+    <div class="w-full">
+        <div hx-get="{{ all_offers_url }}" hx-trigger="every 3s"></div>
+    </div>
+</div>
+{% endblock %}

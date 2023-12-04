@@ -1,0 +1,76 @@
+{% url 'dashboard_all_offers' as all_offers_url %}
+<table class="table-auto w-full space-y-2">
+  <thead>
+    <tr>
+      <th class="h-11 px-6 py-3 bg-gray-50 border-b border-gray-200 text-slate-600 text-xs font-medium font-sans leading-[18px] justify-start items-center gap-1"></th>
+      <th class="h-11 px-6 py-3 bg-gray-50 border-b border-gray-200 text-slate-600 text-xs font-medium font-sans leading-[18px] justify-start items-center gap-1">Title</th>
+      <th class="h-11 px-6 py-3 bg-gray-50 border-b border-gray-200 text-slate-600 text-xs font-medium font-sans leading-[18px] justify-start items-center gap-1">Model</th>
+      <th class="h-11 px-6 py-3 bg-gray-50 border-b border-gray-200 text-slate-600 text-xs font-medium font-sans leading-[18px] justify-start items-center gap-1">Price</th>
+    </tr>
+  </thead>
+  {% for offer in offers %}
+    <tr class="border-b border-gray-400 hover:bg-gray-100 transition h-[80px]">
+      <td>
+        {% if offer.image_url %}
+          <img src="{{ offer.image_url }}" alt="{{ image.title }}" width="100" height="100" />
+        {% endif %}
+      </td>
+      <td>
+        <div class="flex flex-col gap-2">
+            <div>
+                <a href="{{ offer.url }}" class="flex flex-row items-center gap-2 font-semibold text-gray-700 hover:text-gray-600 transition">
+                    <img src="{{ offer.source.image_url }}" alt="{{ image.title }}" height="30px" />
+                    {{ offer.title }}
+                </a>
+                <span class="text-sm text-slate-700">
+                    {{ offer.publication_date }}
+                </span>
+            </div>
+          <div class="flex flex-row gap-8">
+            <div class="flex flex-col text-sm text-slate-600 w-[370px]">
+              <div class="flex flex-row">
+                {% if offer.trim %}
+                  <span>{{ offer.trim }}&nbsp;&#8226;&nbsp;</span>
+                {% endif %}
+                {% if offer.generation %}
+                  <span>{{ offer.generation }}&nbsp;&#8226;&nbsp;</span>
+                {% endif %}
+                <span>{{ offer.production_year }}</span>
+              </div>
+              <span>
+                {{ offer.mileage }} km&nbsp;&#8226;&nbsp;{{ offer.displacement }} cm3&nbsp;&#8226;&nbsp;{{ offer.get_fuel_display }}&nbsp;&#8226;&nbsp;
+                {{ offer.get_transmission_display }}
+              </span>
+            </div>
+            <div class="flex flex-col text-sm text-slate-600">
+                {% if offer.damaged is not None %}
+                    <span class="flex flex-row items-center">
+                        {% trans "Damaged" %}: 
+                        <span class="material-symbols-outlined text-green-500/75" x-show="'{{ offer.damaged }}' === 'True'">
+                            check
+                        </span>
+                        <span class="material-symbols-outlined text-red-500/75" x-show="'{{ offer.damaged }}' === 'False'">
+                            close
+                        </span>
+                    </span>
+                {% endif %}
+                {% if offer.is_imported is not None %}
+                    <span class="flex flex-row items-center">
+                        {% trans "Imported" %}: 
+                        <span class="material-symbols-outlined text-green-500/75" x-show="'{{ offer.is_imported }}' === 'True'">
+                            check
+                        </span>
+                        <span class="material-symbols-outlined text-red-500/75" x-show="'{{ offer.is_imported }}' === 'False'">
+                            close
+                        </span>
+                    </span>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </td>
+      <td>{{ offer.model.make }} {{ offer.model }}</td>
+      <td>{{ offer.price }}</td>
+    </tr>
+  {% endfor %}
+</table>
