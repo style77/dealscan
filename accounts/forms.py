@@ -1,7 +1,13 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from allauth.account.forms import AddEmailForm, LoginForm, ResetPasswordForm, SignupForm
+from allauth.account.forms import (
+    AddEmailForm,
+    LoginForm,
+    ResetPasswordForm,
+    SignupForm,
+    ResetPasswordKeyForm
+)
 from allauth.account.models import EmailAddress
 from django import forms
 from django.contrib import messages
@@ -187,3 +193,22 @@ class AccountForm(AddEmailForm):
             self.user.save()
 
         return changes
+
+
+class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
+    PASSWORD_INPUT_CLASS = "grow shrink basis-0 text-gray-500 text-base font-normal font-sans leading-normal h-6 self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-gray-300 justify-start items-center gap-2 inline-flex"
+
+    def __init__(self, *args, **kwargs):
+        super(CustomResetPasswordKeyForm, self).__init__(*args, **kwargs)
+
+        self.fields['password1'].label = _("Password")
+        self.fields['password1'].widget.attrs.update({
+            'class': self.PASSWORD_INPUT_CLASS,
+            'placeholder': '••••••••',
+        })
+
+        self.fields['password2'].label = _("Confirm password")
+        self.fields['password2'].widget.attrs.update({
+            'class': self.PASSWORD_INPUT_CLASS,
+            'placeholder': '••••••••',
+        })
