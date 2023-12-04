@@ -5,6 +5,7 @@ module.exports = {
       './dealscan/templates/**/*.html',
       './crawler/templates/**/*.html',
       './poll/templates/**/*.html',
+      'components/**/*.html'
   ],
   theme: {
     extend: {
