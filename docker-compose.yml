@@ -69,6 +69,16 @@ services:
       dealscan:
         condition: service_started
 
+  refresher:
+    build:
+      dockerfile: Dockerfile
+    command: ./crawler/jobs.sh
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      dealscan-db:
+        condition: service_healthy
+
   dealscan-migrations:
     build:
       dockerfile: Dockerfile
