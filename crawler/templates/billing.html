@@ -1,3 +1,81 @@
 {% include 'layouts/dashboard_base.html' %}
 {% block content %}
+  <div class="w-full min-h-screen p-4 gap-4 flex flex-col">
+    <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+        <div class="self-stretch justify-start items-start gap-4 inline-flex">
+            <div class="grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
+                <div class="self-stretch text-gray-900 text-3xl font-semibold font-sans leading-[38px]">{% trans "Billing" %}</div>
+                <div class="self-stretch text-slate-600 text-md font-regular font-sans leading-[12px]">{% trans "Subscribe to Plan and manage your current plans." %}</div>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-row gap-2 w-full justify-center">
+        {% for product in products %}
+            {% for plan in product.plan_set.all %}
+                <div class="w-56 bg-white rounded-2xl shadow border border-gray-200 flex flex-col justify-between items-start gap-4">
+                    <div class="self-stretch px-8 pt-8 gap-6 flex flex-col justify-start items-start">
+                        <div class="self-stretch gap-4 flex flex-col justify-start items-center">
+                        <div class="w-12 h-12 p-3 rounded-[10px] shadow border border-gray-200 flex justify-center items-center">
+                            <span class="material-symbols-outlined w-6 h-6 relative text-green-700">
+                            bolt
+                            </span>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <div class="self-stretch text-center text-green-700 text-md font-semibold font-sans">{{ product.name }}</div>
+                            <div class="self-stretch text-center text-black/75 text-xs font-regular font-sans">{{ product.description }}</div>
+                        </div>
+                        <div class="flex flex-row items-end">
+                            <div class="self-stretch text-center text-gray-900 text-lg font-semibold font-sans">{{ plan.human_readable_price }}</div>
+                        </div>
+                        <div class="self-stretch text-center text-slate-600/50 text-sm font-normal font-sans leading-normal" x-show="'{{ plan.interval }}' == 'year'">Billed annually.</div>
+                        </div>
+                    </div>
+                    {% comment %} <div class="self-stretch h-64 px-8 pt-8 pb-10 gap-6 flex flex-col justify-start items-start">
+                        <div class="self-stretch gap-4 flex flex-col justify-start items-start"> TODO not possible for now WAIT FOR DJSTRIPE 3.0
+                        {% for feature in product.plan_set.all.first.features %}
+                            <div class="self-stretch gap-3 flex items-start text-slate-600">
+                            <div class="w-6 h-6 relative bg-green-50 rounded-full">{{ feature.name }}</div>
+                            <div class="flex-grow flex-shrink-0 flex-basis-0 flex-col justify-start items-start">
+                                <div class="self-stretch text-slate-600 text-base font-normal font-sans leading-normal truncate"></div>
+                            </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div> {% endcomment %}
+                    <div class="self-stretch h-28 p-8 bg-gray-50 border-t border-gray-200 flex flex-col justify-start items-start gap-6">
+                        <div class="self-stretch h-12 flex flex-col justify-start items-start gap-3" x-data="{sessionId: null}">
+                            {% url "dashboard_billing" as billing_url %}
+                            <button
+                                x-show="'{{ plan.id}}' === '{{ request.GET.plan_id }}'"
+                                class="self-stretch px-[18px] py-3 bg-green-600 hover:bg-green-500 rounded-lg shadow transition flex justify-center items-center gap-1.5"
+                                disabled>
+                                <div class="px-0.5 flex justify-center items-center">
+                                    <div class="text-white text-base font-semibold font-sans leading-normal">{% trans "Selected" %}</div>
+                                </div>
+                            </button>
+                            <a
+                                href="{{ billing_url }}?plan_id={{ plan.id }}"
+                                x-show="'{{ plan.id}}' !== '{{ request.GET.plan_id }}' || !'{{ request.GET.plan_id }}'"
+                                class="self-stretch px-[18px] py-3 bg-green-500 hover:bg-green-400 rounded-lg shadow transition flex justify-center items-center gap-1.5">
+                                <div class="px-0.5 flex justify-center items-center">
+                                    <div class="text-white text-base font-semibold font-sans leading-normal">{% trans "Subscribe" %}</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% if request.GET.plan_id %}
+        <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+            <div class="self-stretch justify-start items-start gap-4 inline-flex">
+                <div class="grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
+                    <div class="self-stretch text-gray-900 text-xl font-semibold font-sans leading-[22px]">{% trans "Proceed checkout" %}</div>
+                    <div class="self-stretch text-slate-600 text-sm font-regular font-sans leading-[12px]">{% trans "Subscribe to Plan and manage your current plans." %}</div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+  </div>
 {% endblock %}
