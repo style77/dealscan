@@ -32,7 +32,7 @@
             {% url 'account_confirm_email' confirmation.key as action_url %}
             <form method="post" action="{{ action_url }}" class="self-stretch">
               {% csrf_token %}
-              <button class="w-full px-4 py-2.5 bg-green-500 hover:bg-green-600 transition rounded-lg shadow border border-green-500 justify-center items-center gap-1.5 inline-flex">
+              <button class="w-full px-4 py-2.5 bg-green-500 hover:bg-green-600 transition rounded-lg shadow justify-center items-center gap-1.5 inline-flex">
                 <div type="submit" class="px-0.5 justify-center items-center flex">
                   <div class="text-white text-base font-semibold font-sans leading-normal">
                     {% trans 'Confirm' %}
