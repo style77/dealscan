@@ -44,10 +44,14 @@
           </a>
         </div>
         {% url 'account_login' as login_url %}
-        <div class="justify-center items-center gap-1.5 inline-flex">
-          <div class="w-5 h-5 relative"></div>
-          <a href="{{ login_url }}" class="text-slate-600 text-sm font-semibold font-sans leading-tight">{% trans 'Back to log in' %}</a>
-        </div>
+        <a href="{{ login_url }}" class="justify-center items-center gap-1.5 inline-flex">
+          <div class="w-5 h-5 relative items-center flex">
+            <span class="material-symbols-outlined text-slate-600" style="font-size: 18px;">
+                arrow_back
+            </span>
+          </div>
+          <span class="text-slate-600 text-sm font-semibold font-sans leading-tight">{% trans 'Back to log in' %}</span>
+        </a>
       </div>
     </div>
   </div>
