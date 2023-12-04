@@ -2,127 +2,8 @@
 {% load allauth i18n %}
 {% block content %}
 <div class="flex flex-col w-full">
+  {% include "snippets/email_unverified.html" %}
   {% url 'account' as email_url %}
-  {% if new_emailaddress %}
-    <div class="m-4 h-[132px] lg:h-[72px] p-3 bg-green-700 rounded-xl shadow border border-green-500 justify-start items-start inline-flex">
-      <div class="grow shrink basis-0 justify-start items-center gap-3 flex">
-        <div class="grow shrink basis-0 justify-start items-center gap-4 flex">
-          <div class="p-3 bg-green-500 rounded-[10px] justify-center items-start flex">
-            <span class="material-symbols-outlined w-6 h-6 relative flex-col justify-start items-start flex text-white">mail</span>
-          </div>
-          <div class="grow shrink basis-0 justify-start items-start gap-1.5 flex lg:flex-row flex-col">
-            <div class="text-white text-sm lg:text-base font-semibold font-sans leading-normal">{% trans "Your email is unverified!" %}</div>
-            <div class="text-emerald-200 text-xs lg:text-base font-normal font-sans leading-normal">{% trans "Check your inbox or resend verification email." %}</div>
-          </div>
-        </div>
-        <form class="justify-start items-center gap-2 flex" action="{{ email_url }}" method="post" x-data="timer()" x-init="initTimer()" x-ref="resendConfirmationForm">
-          {% csrf_token %}
-          <input type="hidden" name="email" value="{{ new_emailaddress.email }}" />
-          <button @click="submitForm" name="action_send" class="px-1 lg:px-4 py-4 lg:py-2.5 rounded-lg shadow border border-emerald-300 justify-center items-center gap-1.5 flex bg-white" :class="{'!bg-gray-200 hover:cursor-not-allowed': remaining}" :disabled="remaining">
-            <div class="px-0.5 justify-center items-center flex">
-              <div class="text-green-700 text-xs lg:text-base font-semibold font-sans leading-normal" x-show="!remaining">{% trans "Resend email" %}</div>
-              <div class="text-green-700 text-xs lg:text-base font-semibold font-sans leading-normal" x-show="remaining" :class="{'bg-gray-200': remaining}">
-                {% trans "Try again in" %}
-                <span x-text="time().seconds + 's'" />
-              </div>
-            </div>
-          </button>
-        </form>
-      </div>
-    </div>
-    <script>
-      function timer() {
-        let intervalId;
-
-        return {
-          expiry: Alpine.$persist('expiryTime', new Date().getTime() + 59 * 1000),
-          remaining: null,
-          initTimer() {
-            const storedExpiry = parseInt(this.expiry);
-            const currentTime = new Date().getTime();
-            if (storedExpiry && storedExpiry > currentTime) {
-              this.expiry = storedExpiry;
-              this.startTimer();
-            }
-          },
-          startTimer() {
-            this.setRemaining();
-            intervalId = setInterval(() => {
-              this.setRemaining();
-            }, 1000);
-          },
-          setRemaining() {
-            const diff = this.expiry - new Date().getTime();
-            if (diff <= 0) {
-              this.remaining = 0;
-              this.stopTimer();
-            } else {
-              this.remaining = parseInt(diff / 1000);
-            }
-          },
-          stopTimer() {
-            clearInterval(intervalId);
-          },
-          days() {
-            return {
-              value: this.remaining / 86400,
-              remaining: this.remaining % 86400
-            };
-          },
-          hours() {
-            return {
-              value: this.days().remaining / 3600,
-              remaining: this.days().remaining % 3600
-            };
-          },
-          minutes() {
-            return {
-              value: this.hours().remaining / 60,
-              remaining: this.hours().remaining % 60
-            };
-          },
-          seconds() {
-            return {
-              value: this.minutes().remaining,
-            };
-          },
-          format(value) {
-            return ("0" + parseInt(value)).slice(-2);
-          },
-          time() {
-            return {
-              days: this.format(this.days().value),
-              hours: this.format(this.hours().value),
-              minutes: this.format(this.minutes().value),
-              seconds: this.format(this.seconds().value),
-            };
-          },
-          async submitForm() {
-            try {
-              const response = await fetch('{{ email_url }}', {
-                method: 'POST',
-                body: new FormData(this.$refs.resendConfirmationForm),
-              });
-      
-              if (response.redirected) {
-                const redirectedUrl = response.url;
-                window.location.href = redirectedUrl;
-              } else {
-                const responseData = await response.json();
-              }
-      
-              this.expiry = new Date().getTime() + 59 * 1000;
-              Alpine.$persist('expiryTime', this.expiry);
-              this.startTimer();
-            } catch (error) {
-              console.error('Error occurred:', error);
-            }
-          }
-        };
-      }
-    </script>
-
-  {% endif %}
   <div class="pt-8 pb-12 w-1/2 bg-white flex-col justify-start items-start gap-8 flex" x-data="{'tabIndex': 0}">
     <div class="self-stretch px-8 flex-col justify-start items-start gap-6 flex">
       <div class="self-stretch flex-col justify-start items-start gap-5 flex">
@@ -228,7 +109,7 @@
                 {% endif %}
               </div>
             </div>
-            <div class="grow shrink basis-0 h-14 justify-start items-start gap-6 flex">
+            <div class="grow shrink basis-0 h-16 justify-start items-start gap-6 flex">
               <div class="grow shrink basis-0 flex-col justify-start items-start inline-flex">
                 <div class="self-stretch h-11 flex-col justify-start items-start flex">
                   {{ form.email }}

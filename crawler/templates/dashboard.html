@@ -1,6 +1,9 @@
 {% include 'layouts/dashboard_base.html' %}
 {% block content %}
+<div class="w-full">
+    {% include "allauth/account/snippets/email_unverified.html" %}
     {% if poll_id is not None %}
         {% component "poll" selected_poll_id=poll_id %}
     {% endif %}
+</div>
 {% endblock %}
