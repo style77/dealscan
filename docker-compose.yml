@@ -47,6 +47,7 @@ services:
     depends_on:
       - dealscan-db
       - dealscan-redis
+      - dealscan-migrations
     volumes:
       - .:/usr/src/app
     healthcheck:
