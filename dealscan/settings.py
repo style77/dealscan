@@ -45,7 +45,7 @@ DEFAULT_APPS = [
 
 AUTH_APPS = ["allauth", "allauth.account", "allauth.socialaccount"]
 
-CORE_APPS = ["accounts", "crawler", "poll"]
+CORE_APPS = ["accounts", "crawler", "polls"]
 
 THIRD_PARTY_APPS = [
     "simple_history",
@@ -61,7 +61,7 @@ THIRD_PARTY_APPS = [
 
 DEV_APPS = ["django_browser_reload"]
 
-INSTALLED_APPS = UNFOLD_APPS + DEFAULT_APPS + AUTH_APPS + CORE_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = UNFOLD_APPS + DEFAULT_APPS + CORE_APPS + AUTH_APPS + THIRD_PARTY_APPS
 if DEBUG:
     INSTALLED_APPS += DEV_APPS
 
@@ -230,6 +230,7 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "accounts" / "static",
     BASE_DIR / "dealscan" / "static",
+    BASE_DIR / "components"
 ]
 
 
@@ -369,12 +370,12 @@ UNFOLD = {
                     {
                         "title": _("Polls"),
                         "icon": "quiz",
-                        "link": reverse_lazy("admin:poll_poll_changelist")
+                        "link": reverse_lazy("admin:polls_poll_changelist")
                     },
                     {
                         "title": _("Answers"),
                         "icon": "how_to_vote",
-                        "link": reverse_lazy("admin:poll_pollanswer_changelist")
+                        "link": reverse_lazy("admin:polls_pollanswer_changelist")
                     }
                 ]
             }
