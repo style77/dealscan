@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="flex flex-col bg-white border-r-2 min-h-screen shrink self-stretch justify-between items-start " x-data="{ sidebarOpen: $persist(true) }" :class="{ 'w-[230px]': sidebarOpen, 'w-[90px]': !sidebarOpen }">
+<div class="flex flex-col bg-white border-r-2 min-h-screen shrink self-stretch justify-between items-start transition-all ease-in-out duration-500" x-data="{ sidebarOpen: $persist(true) }" :class="{ sidebarOpen ? 'w-[230px]' : 'w-[90px]' }">
   <div class="self-stretch pt-8 flex-col justify-start items-start gap-6 flex">
     <div class="self-stretch h-8 pl-6 pr-5 flex justify-center">
       <div class="h-8 flex justify-start items-center gap-2.5" :class="{ 'w-full': sidebarOpen }">
