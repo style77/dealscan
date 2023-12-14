@@ -1,9 +1,9 @@
 version: '3.3'
 
 services:
-  dealscan-redis:
+  redis:
     image: redis:latest
-    container_name: dealscan-redis
+    container_name: redis
     ports:
       - "6379:6379"
     healthcheck:
@@ -12,9 +12,9 @@ services:
       timeout: 5s
       retries: 5
 
-  dealscan-db:
+  db:
     image: postgres:latest
-    container_name: dealscan-db
+    container_name: db
     ports:
       - "5432:5432"
     environment:
@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     command: python manage.py runserver 0.0.0.0:8000
-    container_name: dealscan
+    container_name: app
     ports:
       - "8000:8000"
     env_file:
@@ -42,12 +42,12 @@ services:
       - DEBUG=True
       - SECRET_KEY=secret
       - ENVIRONMENT=dev
-      - DATABASE_URL=postgres://postgres:postgres@dealscan-db/dealscan
-      - REDIS_URL=redis://dealscan-redis/0
+      - DATABASE_URL=postgres://postgres:postgres@db/dealscan
+      - REDIS_URL=redis://redis/0
     depends_on:
-      - dealscan-db
-      - dealscan-redis
-      - dealscan-migrations
+      - db
+      - redis
+      - migrations
     volumes:
       - .:/usr/src/app
     healthcheck:
@@ -57,10 +57,10 @@ services:
       timeout: 10s
       retries: 10
 
-  dealscan-sync:
+  sync:
     build:
       dockerfile: Dockerfile
-    container_name: dealscan-sync
+    container_name: sync
     restart: no
     command: python manage.py djstripe_sync_models
     env_file:
@@ -76,13 +76,13 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      dealscan-db:
+      db:
         condition: service_healthy
 
-  dealscan-migrations:
+  migrations:
     build:
       dockerfile: Dockerfile
-    container_name: dealscan-migrations
+    container_name: migrations
     restart: no
     command: python manage.py migrate --noinput
     env_file:
@@ -90,7 +90,7 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      dealscan-db:
+      db:
         condition: service_healthy
 
   stripe-cli:
@@ -102,52 +102,3 @@ services:
       - .env
     environment:
       - STRIPE_API_KEY=${STRIPE_TEST_SECRET_KEY}
-
-  # dealscan-celery:
-  #   build:
-  #     dockerfile: Dockerfile
-  #   image: dealscan-celery:latest
-  #   container_name: dealscan-celery
-  #   command: poetry run celery -A dealscan worker -Q default -n dealscan.%%h --loglevel=INFO --max-memory-per-child=512000 --concurrency=1
-  #   env_file:
-  #     - .env
-  #   volumes:
-  #     - .:/usr/src/app
-  #   depends_on:
-  #     dealscan:
-  #       condition: service_healthy
-  #     dealscan-redis:
-  #       condition: service_healthy
-
-  # dealscan-celery-beat:
-  #     build:
-  #       dockerfile: Dockerfile
-  #     image: dealscan-celery-beat:latest
-  #     container_name: dealscan-celery-beat
-  #     command: poetry run celery -A dealscan beat -S redbeat.RedBeatScheduler --loglevel=DEBUG --pidfile /tmp/dealscan-celerybeat.pid
-  #     env_file:
-  #     - .env
-  #     volumes:
-  #       - .:/usr/src/app
-  #     depends_on:
-  #       - dealscan
-  #       - dealscan-celery
-  #       - dealscan-db
-  #       - dealscan-redis
-
-  # dealscan-celery-flower:
-  #     build:
-  #       dockerfile: Dockerfile
-  #     container_name: dealscan-celery-flower
-  #     command: poetry run celery -A dealscan flower --loglevel=INFO --port=9090 --broker=redis://dealscan-redis:6379/0 --basic_auth=dealscan:dealscan
-  #     env_file:
-  #     - .env
-  #     ports:
-  #       - "127.0.0.1:9090:9090"
-  #     restart: unless-stopped
-  #     volumes:
-  #       - .:/usr/src/app
-  #     depends_on:
-  #       - dealscan
-  #       - dealscan-celery
-  #       - dealscan-redis

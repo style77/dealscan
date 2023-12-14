@@ -131,7 +131,7 @@ REDIS_URL = os.getenv("REDIS_URL")
 
 DATABASES = {
     "default": dj_database_url.config(
-        default="postgres://postgres:postgres@dealscan-db/dealscan",
+        default="postgres://postgres:postgres@db/dealscan",
         conn_max_age=600,
         conn_health_checks=True,
     )
@@ -201,6 +201,7 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 # Stripe
 
 STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY")
+# STRIPE_SECRET_KEY = os.getenv("STRIPE_LIVE_SECRET_KEY") if not DEBUG else os.getenv("STRIPE_TEST_SECRET_KEY")
 STRIPE_LIVE_MODE = not DEBUG
 DJSTRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 DJSTRIPE_USE_NATIVE_JSONFIELD = True
