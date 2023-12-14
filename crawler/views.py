@@ -5,11 +5,18 @@ from django import http
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Subquery
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView
 from djstripe.models import Customer, Product
+import stripe
+
+from djstripe import settings as djstripe_settings
+from djstripe import models
+
 
 from crawler.models import Offer
 from polls.models import Poll, PollAnswer
@@ -105,17 +112,64 @@ class OfferComponentView(TemplateView):
         return context
 
 
+stripe.api_key = models.APIKey.objects.filter(livemode=not settings.DEBUG).first().secret
+
+
 class BillingView(TemplateView):
     template_name = "billing.html"
 
+    def initialize_checkout(self, request: http.HttpRequest, price_id: str) -> str:
+        return_url = request.build_absolute_uri(
+            reverse("dashboard_billing")
+        ) + "?session_id={CHECKOUT_SESSION_ID}"
+        id = request.user.id
+        metadata = {
+            f"{djstripe_settings.djstripe_settings.SUBSCRIBER_CUSTOMER_KEY}": id
+        }
+
+        try:
+            customer = models.Customer.objects.get(subscriber=request.user)
+            session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                customer=customer.id,
+                line_items=[
+                    {
+                        "price": price_id,
+                        "quantity": 1,
+                    },
+                ],
+                ui_mode="embedded",
+                mode="subscription",
+                return_url=return_url,
+                metadata=metadata,
+            )
+
+        except models.Customer.DoesNotExist:
+            session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=[
+                    {
+                        "price": price_id,
+                        "quantity": 1,
+                    },
+                ],
+                ui_mode="embedded",
+                mode="subscription",
+                return_url=return_url,
+                metadata=metadata,
+            )
+
+        return session.client_secret
+
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["current_plan_id"] = self.request.GET.get("plan_id")
-        z = Customer.objects.filter(subscriber=self.request.user).first()
-        subscriptions = z.subscriptions if z else None
-        context["subscriptions"] = subscriptions
-        context["publishable_key"] = settings.STRIPE_PUBLISHABLE_KEY
+        price_id = self.request.GET.get("plan_id")
+
+        context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLISHABLE_KEY
         context["products"] = Product.objects.filter(active=True)
+
+        if price_id:
+            context["client_secret"] = self.initialize_checkout(self.request, price_id)
 
         return context
 

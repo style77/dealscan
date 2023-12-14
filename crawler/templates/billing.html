@@ -45,14 +45,15 @@
                     <div class="self-stretch h-28 p-8 bg-gray-50 border-t border-gray-200 flex flex-col justify-start items-start gap-6">
                         <div class="self-stretch h-12 flex flex-col justify-start items-start gap-3" x-data="{sessionId: null}">
                             {% url "dashboard_billing" as billing_url %}
-                            <button
+                            <a
+                                href="{{ billing_url }}"
                                 x-show="'{{ plan.id}}' === '{{ request.GET.plan_id }}'"
                                 class="self-stretch px-[18px] py-3 bg-green-600 hover:bg-green-500 rounded-lg shadow transition flex justify-center items-center gap-1.5"
                                 disabled>
                                 <div class="px-0.5 flex justify-center items-center">
                                     <div class="text-white text-base font-semibold font-sans leading-normal">{% trans "Selected" %}</div>
                                 </div>
-                            </button>
+                            </a>
                             <a
                                 href="{{ billing_url }}?plan_id={{ plan.id }}"
                                 x-show="'{{ plan.id}}' !== '{{ request.GET.plan_id }}' || !'{{ request.GET.plan_id }}'"
@@ -75,7 +76,32 @@
                     <div class="self-stretch text-slate-600 text-sm font-regular font-sans leading-[12px]">{% trans "Subscribe to Plan and manage your current plans." %}</div>
                 </div>
             </div>
+            <div id="checkout" class="w-full">
+            </div>
         </div>
+        <script>
+            const stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}', {});
+        
+            initialize("{{ client_secret }}");
+
+            async function initialize(clientSecret) {
+                const checkout = await stripe.initEmbeddedCheckout({
+                    clientSecret,
+                });
+        
+                checkout.mount('#checkout');
+            }
+          </script>
     {% endif %}
+    <div>
+        <div class="self-stretch flex-col justify-start items-start gap-5 flex">
+            <div class="self-stretch justify-start items-start gap-4 inline-flex">
+                <div class="grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
+                    <div class="self-stretch text-gray-900 text-xl font-semibold font-sans leading-[22px]">{% trans "Subscriptions" %}</div>
+                    <div class="self-stretch text-slate-600 text-sm font-regular font-sans leading-[12px]">{% trans "Manage your subscriptions." %}</div>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 {% endblock %}
