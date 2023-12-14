@@ -172,7 +172,7 @@ class MyEmailView(AjaxCapableProcessFormViewMixin, FormView):
             res = self._resend_verification(request)
         elif "action_edit" in request.POST:
             form = self.get_form()
-            if form.is_valid():  # TODO WHY IS FORM NOT CALLED BY ITSELF?
+            if form.is_valid():
                 return self.form_valid(form)
             else:
                 return self.form_invalid(form)
