@@ -118,17 +118,15 @@ stripe.api_key = models.APIKey.objects.filter(livemode=not settings.DEBUG).first
 class BillingView(TemplateView):
     template_name = "billing.html"
 
-    def initialize_checkout(self, request: http.HttpRequest, price_id: str) -> str:
+    def initialize_checkout(self, request: http.HttpRequest, price_id: str, customer: models.Customer) -> str:
         return_url = request.build_absolute_uri(
             reverse("dashboard_billing")
         ) + "?session_id={CHECKOUT_SESSION_ID}"
-        id = request.user.id
         metadata = {
-            f"{djstripe_settings.djstripe_settings.SUBSCRIBER_CUSTOMER_KEY}": id
+            f"{djstripe_settings.djstripe_settings.SUBSCRIBER_CUSTOMER_KEY}": customer.subscriber.id
         }
 
         try:
-            customer = models.Customer.objects.get(subscriber=request.user)
             session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
                 customer=customer.id,
@@ -164,12 +162,21 @@ class BillingView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         price_id = self.request.GET.get("plan_id")
+        session_id = self.request.GET.get("session_id")
 
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLISHABLE_KEY
         context["products"] = Product.objects.filter(active=True)
 
+        customer = models.Customer.objects.get(subscriber=self.request.user)
+
         if price_id:
-            context["client_secret"] = self.initialize_checkout(self.request, price_id)
+            context["client_secret"] = self.initialize_checkout(self.request, price_id, customer)
+
+        context["subscrptions"] = models.Subscription.objects.filter(customer=customer)
+
+        if session_id:
+            session = stripe.checkout.Session.retrieve(session_id)
+            context["payment_status"] = session.status
 
         return context
 

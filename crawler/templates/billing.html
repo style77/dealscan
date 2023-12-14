@@ -6,6 +6,13 @@
             <div class="grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
                 <div class="self-stretch text-gray-900 text-3xl font-semibold font-sans leading-[38px]">{% trans "Billing" %}</div>
                 <div class="self-stretch text-slate-600 text-md font-regular font-sans leading-[12px]">{% trans "Subscribe to Plan and manage your current plans." %}</div>
+                {% if payment_status %}
+                    <div class="self-stretch text-md capitalize">Payment status: <span x-bind:class="{
+                        'text-green-500': '{{ payment_status }}' === 'complete',
+                        'text-red-500': '{{ payment_status }}' === 'expired',
+                        'text-gray-400': '{{ payment_status }}' === 'open'
+                    }">{{ payment_status }}</div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -100,6 +107,11 @@
                     <div class="self-stretch text-gray-900 text-xl font-semibold font-sans leading-[22px]">{% trans "Subscriptions" %}</div>
                     <div class="self-stretch text-slate-600 text-sm font-regular font-sans leading-[12px]">{% trans "Manage your subscriptions." %}</div>
                 </div>
+            </div>
+            <div class="flex flex-col">
+                {% for subscription in subscriptions %}
+                    {{ subscription }}
+                {% endfor %}
             </div>
         </div>
     </div>
