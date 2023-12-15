@@ -167,13 +167,9 @@ class Crawler(BaseCrawler):
             mileage=int(data["Przebieg"].replace(" km", "").replace(" ", "")),
             displacement=displacement,
             fuel=constants.FUEL_CHOICES_MAP.get(data["Rodzaj paliwa"], "other"),
-            transmission=constants.TRANSMISSION_CHOICES_MAP[
-                data["Skrzynia biegów"]
-            ],
+            transmission=constants.TRANSMISSION_CHOICES_MAP[data["Skrzynia biegów"]],
             drive=data.get("Napęd"),
-            damaged=self._get_map_option(
-                data, "Uszkodzony", self._to_bool, None
-            ),
+            damaged=self._get_map_option(data, "Uszkodzony", self._to_bool, None),
             body=constants.BODY_CHOICES_MAP.get(data["Typ nadwozia"], "other"),
             price=Money(float(data["price"]), data["currency"]),  # type: ignore
             VIN=data.get("VIN"),

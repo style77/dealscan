@@ -11,7 +11,7 @@ def subscription_required(function):
             customer = Customer.objects.filter(subscriber=request.user)
             if not customer.exists():
                 return redirect("dashboard_billing")
-            
+
             customer = customer.first()
 
             if Subscription.objects.filter(

@@ -5,13 +5,11 @@ from django import http
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Subquery
 from django.urls import reverse, reverse_lazy
-from django.views import View
 from django.views.generic import TemplateView
-from djstripe.models import Customer, Product
+from djstripe.models import Product
 import stripe
 
 from djstripe import settings as djstripe_settings
@@ -123,10 +121,13 @@ class BillingView(TemplateView):
             raise ValueError("No API key found")
         stripe.api_key = key.secret
 
-    def initialize_checkout(self, request: http.HttpRequest, price_id: str, customer: models.Customer) -> str:
-        return_url = request.build_absolute_uri(
-            reverse("dashboard_billing")
-        ) + "?session_id={CHECKOUT_SESSION_ID}"
+    def initialize_checkout(
+        self, request: http.HttpRequest, price_id: str, customer: models.Customer
+    ) -> str:
+        return_url = (
+            request.build_absolute_uri(reverse("dashboard_billing"))
+            + "?session_id={CHECKOUT_SESSION_ID}"
+        )
         metadata = {
             f"{djstripe_settings.djstripe_settings.SUBSCRIBER_CUSTOMER_KEY}": customer.subscriber.id
         }
@@ -175,7 +176,9 @@ class BillingView(TemplateView):
         customer, _ = models.Customer.get_or_create(self.request.user)
 
         if price_id:
-            context["client_secret"] = self.initialize_checkout(self.request, price_id, customer)
+            context["client_secret"] = self.initialize_checkout(
+                self.request, price_id, customer
+            )
 
         context["subscriptions"] = models.Subscription.objects.filter(customer=customer)
 

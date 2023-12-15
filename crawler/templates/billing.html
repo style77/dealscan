@@ -110,7 +110,8 @@
             </div>
             <div class="flex flex-col">
                 {% for subscription in subscriptions %}
-                    {{ subscription }}
+                    {% comment %} subscription management {% endcomment %}
+                    
                 {% endfor %}
             </div>
         </div>
