@@ -172,16 +172,12 @@ class BillingView(TemplateView):
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLISHABLE_KEY
         context["products"] = Product.objects.filter(active=True)
 
-        customer = models.Customer.objects.filter(subscriber=self.request.user)
-        if customer.exists():
-            customer = customer.first()
-        else:
-            customer = None  
+        customer, _ = models.Customer.get_or_create(self.request.user)
 
         if price_id:
             context["client_secret"] = self.initialize_checkout(self.request, price_id, customer)
 
-        context["subscrptions"] = models.Subscription.objects.filter(customer=customer)
+        context["subscriptions"] = models.Subscription.objects.filter(customer=customer)
 
         if session_id:
             session = stripe.checkout.Session.retrieve(session_id)
