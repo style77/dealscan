@@ -112,11 +112,16 @@ class OfferComponentView(TemplateView):
         return context
 
 
-stripe.api_key = models.APIKey.objects.filter(livemode=not settings.DEBUG).first().secret
-
-
 class BillingView(TemplateView):
     template_name = "billing.html"
+
+    def __init__(self, **kwargs: Any) -> None:
+        super().__init__(**kwargs)
+
+        key = models.APIKey.objects.filter(livemode=settings.STRIPE_LIVE_MODE).first()
+        if not key:
+            raise ValueError("No API key found")
+        stripe.api_key = key.secret
 
     def initialize_checkout(self, request: http.HttpRequest, price_id: str, customer: models.Customer) -> str:
         return_url = request.build_absolute_uri(
@@ -167,7 +172,11 @@ class BillingView(TemplateView):
         context["STRIPE_PUBLIC_KEY"] = settings.STRIPE_PUBLISHABLE_KEY
         context["products"] = Product.objects.filter(active=True)
 
-        customer = models.Customer.objects.get(subscriber=self.request.user)
+        customer = models.Customer.objects.filter(subscriber=self.request.user)
+        if customer.exists():
+            customer = customer.first()
+        else:
+            customer = None  
 
         if price_id:
             context["client_secret"] = self.initialize_checkout(self.request, price_id, customer)
