@@ -5,5 +5,58 @@
     {% if poll_id is not None %}
         {% component "poll" selected_poll_id=poll_id %}
     {% endif %}
+    <div class="w-full h-full pt-8 pb-12 bg-white rounded-tl-[40px] shadow border-l border-t border-gray-200 flex-col justify-start items-start gap-8 inline-flex">
+        <div class="self-stretch h-[66px] flex-col justify-start items-start gap-6 flex">
+          <div class="self-stretch h-[66px] px-8 flex-col justify-start items-start gap-6 flex">
+            <div class="self-stretch h-[66px] flex-col justify-start items-start gap-5 flex">
+              <div class="self-stretch justify-start items-start gap-4 inline-flex">
+                <div class="grow shrink basis-0 flex-col justify-start items-start gap-1 inline-flex">
+                  <div class="self-stretch text-gray-900 text-3xl font-semibold font-sans leading-[38px]">{% blocktrans %}Welcome back, {{ request.user.username }}{% endblocktrans %}</div>
+                  <div class="self-stretch text-slate-600 text-base font-normal font-sans leading-normal">Track, manage and forecast your customers and orders.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="self-stretch h-44 flex-col justify-start items-start gap-6 flex">
+          <div class="self-stretch h-44 px-8 flex-col justify-start items-start gap-6 flex">
+            <div class="self-stretch justify-start items-start gap-6 inline-flex">
+              <div class="grow shrink basis-0 p-6 bg-white rounded-xl shadow border border-gray-200 flex-col justify-start items-start gap-2 inline-flex">
+                <div>
+                    <div class="self-stretch text-gray-900 text-xl font-semibold font-sans">New finds</div>
+                    <div class="self-stretch text-gray-600 text-md font-regular font-sans">New offers that match your profile</div>
+                </div>
+                <div class="self-stretch justify-start items-end gap-4 inline-flex">
+                  <div class="grow shrink basis-0 flex-col justify-start items-start gap-4 inline-flex">
+                    <div class="self-stretch text-gray-900 text-5xl font-semibold font-sans">0</div>
+                  </div>
+                </div>
+              </div>
+              <div class="grow shrink basis-0 p-6 bg-white rounded-xl shadow border border-gray-200 flex-col justify-start items-start gap-2 inline-flex">
+                <div>
+                    <div class="self-stretch text-gray-900 text-xl font-semibold font-sans">Notifications</div>
+                    <div class="self-stretch text-gray-600 text-md font-regular font-sans">Unread notifications</div>
+                </div>
+                <div class="self-stretch justify-start items-end gap-4 inline-flex">
+                  <div class="grow shrink basis-0 flex-col justify-start items-start gap-4 inline-flex">
+                    <div class="self-stretch text-gray-900 text-5xl font-semibold font-sans">0</div>
+                  </div>
+                </div>
+              </div>
+              <div class="grow shrink basis-0 p-6 bg-white rounded-xl shadow border border-gray-200 flex-col justify-start items-start gap-2 inline-flex">
+                <div>
+                    <div class="self-stretch text-gray-900 text-xl font-semibold font-sans">Plan payment</div>
+                    <div class="self-stretch text-gray-600 text-md font-regular font-sans">Next plan payment on</div>
+                </div>
+                <div class="self-stretch justify-start items-end gap-4 inline-flex">
+                  <div class="grow shrink basis-0 flex-col justify-start items-start gap-4 inline-flex">
+                    <div class="self-stretch text-gray-900 text-xl font-regular font-sans py-2.5">{{ next_billing_date }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
 {% endblock %}
