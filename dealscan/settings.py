@@ -18,6 +18,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", get_random_secret_key())
 
 DEBUG = os.getenv("DEBUG", False)
 
+DEMO = os.getenv("DEMO", False)
+
 ALLOWED_HOSTS: List[str] = ["*"]
 
 
@@ -77,6 +79,9 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
+
+if DEMO:
+    MIDDLEWARE.append("dealscan.middleware.ReadonlyExceptionHandlerMiddleware")
 
 if DEBUG:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
