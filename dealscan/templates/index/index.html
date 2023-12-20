@@ -1,5 +1,58 @@
-{% extends "layouts/simple_base.html" %}
+{% extends 'layouts/simple_base.html' %}
+{% load static %}
 
 {% block content %}
-    {% include "index/elements/header.html" %}
-{% endblock content %}
+  {% include 'index/elements/header.html' %}
+  <div>
+    <div class="w-full h-full py-24 flex-col justify-start items-center gap-16 inline-flex bg-gray-50">
+      <div class="px-8 flex-col justify-start items-center gap-8 flex">
+        <div class="self-stretch flex-col justify-start items-center gap-12 flex">
+          <div class="flex-col justify-start items-center gap-6 flex">
+            {% if settings.DEMO %}
+              <div class="w-fit pl-1 pr-2.5 py-1 mix-blend-multiply bg-green-50 rounded-2xl justify-start items-center gap-3 inline-flex">
+                <div class="justify-start items-start flex">
+                  <div class="px-2.5 py-0.5 bg-white rounded-2xl justify-center items-center flex">
+                    <div class="text-center text-green-700 text-sm font-medium font-sans leading-tight">
+                      {% trans 'Demo version' %}
+                    </div>
+                  </div>
+                </div>
+                <div class="justify-start items-center gap-1 flex">
+                  <div class="text-green-700 text-sm font-medium font-sans leading-tight">
+                    {% blocktrans %}Demo account credentials. <br /> Username: <code>demo</code>, password: <code>demo</code>{% endblocktrans %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+            <div class="self-stretch text-center text-gray-900 text-6xl font-semibold font-sans leading-[72px]">
+              {% trans 'Easiest way to outreach your competitors' %}
+            </div>
+            <div class="text-center text-gray-500 text-xl font-normal font-sans leading-[30px]">
+              {% trans 'Explore the Latest Car Offers Instantly: Your Real-Time Vehicle Deal Finder' %}
+            </div>
+          </div>
+          <div class="justify-start items-start gap-3 inline-flex">
+            <a href="https://demo.dealscan.io/" class="rounded-lg justify-start items-start flex">
+              <div class="px-7 py-4 bg-white hover:bg-gray-50 transition rounded-lg shadow border border-gray-300 justify-center items-center gap-3 flex">
+                <div class="text-slate-700 text-lg font-semibold font-sans leading-7">
+                  {% trans 'Demo' %}
+                </div>
+              </div>
+            </a>
+            <a href="{% url 'account_signup' %}" class="rounded-lg justify-start items-start flex">
+              <div class="px-7 py-4 bg-green-500 hover:bg-green-600 transition rounded-lg shadow border justify-center items-center gap-2 flex">
+                <div class="text-white text-lg font-semibold font-sans leading-7">
+                  {% trans 'Sign up' %}
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="flex-col justify-start items-center md:border-2 md:border-gray-700 md:rounded-lg flex h-full w-full md:w-[1200px]">
+        <img class="w-full rounded-lg" src="{% static 'images/demo_screenshot.png' %}" />
+      </div>
+    </div>
+
+  </div>
+{% endblock %}
