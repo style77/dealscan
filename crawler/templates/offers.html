@@ -14,11 +14,11 @@
         </div>
     </div>
     <div id="filter">
-
+        {% include "elements/filter.html" %}
     </div>
     {% url 'dashboard_all_offers' as all_offers_url %}
     <div class="w-full">
-        <div hx-get="{{ all_offers_url }}" hx-trigger="load, every 3s"></div>
+        <div hx-get="{{ all_offers_url }}?{{ forward_params }}" hx-trigger="load, every 3s"></div>
     </div>
 </div>
 {% endblock %}
