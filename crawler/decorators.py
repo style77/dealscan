@@ -1,7 +1,8 @@
 import functools
+
 from django.shortcuts import redirect
-from djstripe.models import Subscription, Customer
 from djstripe.enums import SubscriptionStatus
+from djstripe.models import Customer, Subscription
 
 
 def subscription_required(function):

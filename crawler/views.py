@@ -1,6 +1,7 @@
 import random
 from typing import Any, Dict, Optional
 
+import stripe
 from django import http
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -9,12 +10,9 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Subquery
 from django.urls import reverse, reverse_lazy
 from django.views.generic import TemplateView
-from djstripe.models import Product
-import stripe
-
-from djstripe import settings as djstripe_settings
 from djstripe import models
-
+from djstripe import settings as djstripe_settings
+from djstripe.models import Product
 
 from crawler.models import Offer
 from polls.models import Poll, PollAnswer

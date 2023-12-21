@@ -10,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 from djstripe.models import Product
 
-
 User = get_user_model()
 
 

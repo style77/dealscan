@@ -1,7 +1,7 @@
-from django.urls import path, include
+from django.urls import include, path
 
-from crawler.views import all_offers_view, billing_view, dashboard_view, offers_view
 from crawler.decorators import subscription_required
+from crawler.views import all_offers_view, billing_view, dashboard_view, offers_view
 
 urlpatterns = [
     path("dashboard/", dashboard_view, name="dashboard"),
