@@ -10,11 +10,20 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 from djstripe.models import Product
 
+
 User = get_user_model()
 
 
 class IndexView(TemplateView):
     template_name = "index/index.html"
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        current_domain = self.request.get_host()
+        context["demo_domain"] = f"https://demo.{current_domain}/"
+
+        return context
 
 
 class PricingView(TemplateView):
