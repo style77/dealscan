@@ -1,0 +1,117 @@
+<div x-data="{ selectedFilter: null, filters: {
+  'makes': {{ current_selected_makes }},
+  'models': {{ current_selected_models }},
+  'years': {{ current_selected_years }},
+  'colors': {{ current_selected_colors }},
+} }" class="border rounded-lg p-4 md:p-6 bg-gray-50">
+  <h2 class="text-lg font-semibold mb-4">{% trans "Filter Options" %}</h2>
+    <div class="grid gap-4 md:gap-6 lg:gap-8">
+        <form class="flex flex-wrap sm:flex-row gap-2 items-start w-full">
+          <button @click="selectedFilter='make'" class="inline-flex hover:bg-gray-100 items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-8 py-2" type="button">
+              <div class="flex flex-col py-2">
+                  <span class="text-gray-900 text-base pt-1">{% trans "Make" %}</span>
+                  <span x-text="filters['makes']" class="text-gray-500 font-semibold text-xs pb-1 truncate w-32"></span>
+              </div>
+          </button>
+          <select x-show="selectedFilter === 'make'" name="makes" multiple class="z-10 bg-white rounded-md border py-2 px-4 shadow-md absolute w-1/5 h-72" @click.away="selectedFilter = null">
+            <option @click="filters['makes'] = []; selectedFilter = null" value="" class="cursor-pointer hover:bg-gray-500 py-1 bg-gray-400">{% trans "Clear" %}</option>
+            {% for make in makes %}
+              <option @click="
+                    if (filters['makes'].includes('{{ make.name }}')) {
+                      filters['makes'] = filters['makes'].filter(item => item !== '{{ make.name }}');
+                    } else {
+                      filters['makes'].push('{{ make.name }}');
+                    }
+                    "
+                    class="cursor-pointer hover:bg-gray-200 py-1"
+                    :selected="filters['makes'].includes('{{ make.name }}') ? 'selected' : ''"
+              >
+              {{ make.name }}
+              </option>
+            {% endfor %}
+          </select>
+
+          <div class="flex flex-col">
+            <button :disabled="filters['makes'].length <= 0 || filters['makes'][0] === ''" @click="selectedFilter='model'" class="inline-flex hover:bg-gray-100 items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-8 py-2" type="button">
+              <div class="flex flex-col py-2">
+                <span class="text-gray-900 text-base pt-1">{% trans "Model" %}</span>
+                <span x-text="filters['models']" class="text-gray-500 font-semibold text-xs pb-1 truncate w-32"></span>
+              </div>
+            </button>
+            <span x-show="filters['makes'].length > 0 && filters['makes'][0] !== '' && filters['models'].length === 0 && filters['models'][0] !== ''" class="text-xs text-gray-400">{% trans "Click search to refresh models basing on selected makes" %}</span>
+          </div>
+          <select x-show="selectedFilter === 'model'" name="models" multiple class="z-10 bg-white rounded-md border py-2 px-4 shadow-md absolute w-1/5 h-72" @click.away="selectedFilter = null">
+            <option @click="filters['models'] = []; selectedFilter = null" value="" class="cursor-pointer hover:bg-gray-500 py-1 bg-gray-400">{% trans "Clear" %}</option>
+            {% for model in models %}
+              <option @click="
+                    if (filters['models'].includes('{{ model.name }}')) {
+                      filters['models'] = filters['model'].filter(item => item !== '{{ model.name }}');
+                    } else {
+                      filters['models'].push('{{ model.name }}');
+                    }
+                    "
+                    value="{{ model.name }}"
+                    class="cursor-pointer hover:bg-gray-200 py-1"
+                    :selected="filters['models'].includes('{{ model.name }}') ? 'selected' : ''"
+              >
+              {{ model.make }} {{ model.name }}
+              </option>
+            {% endfor %}
+          </select>
+
+          <button @click="selectedFilter='year'" class="inline-flex hover:bg-gray-100 items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-8 py-2" type="button">
+            <div class="flex flex-col py-2">
+              <span class="text-gray-900 text-base pt-1">{% trans "Production year" %}</span>
+              <span x-text="filters['years']" class="text-gray-500 font-semibold text-xs pb-1 truncate w-32"></span>
+            </div>
+          </button>
+          <select x-show="selectedFilter === 'year'" name="years" multiple class="bg-white rounded-md border py-2 px-4 shadow-md absolute w-1/5 h-72" @click.away="selectedFilter = null">
+            <option @click="filters['years'] = []; selectedFilter = null" value="" class="cursor-pointer hover:bg-gray-500 py-1 bg-gray-400">{% trans "Clear" %}</option>
+            {% for year in years %}
+              <option @click="
+                    if (filters['years'].includes('{{ year.year }}')) {
+                      filters['years'] = filters['year'].filter(item => item !== '{{ year.year }}');
+                    } else {
+                      filters['years'].push('{{ year.year }}');
+                    }
+                    "
+                    value="{{ year.year }}"
+                    class="cursor-pointer hover:bg-gray-200 py-1"
+                    :selected="filters['years'].includes('{{ year.year }}') ? 'selected' : ''"
+              >
+              {{ year.year }}
+              </option>
+            {% endfor %}
+          </select>
+
+          <button @click="selectedFilter='color'" class="inline-flex hover:bg-gray-100 items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-8 py-2" type="button">
+            <div class="flex flex-col py-2">
+              <span class="text-gray-900 text-base pt-1">{% trans "Color" %}</span>
+              <span x-text="filters['colors']" class="text-gray-500 font-semibold text-xs pb-1 truncate w-32"></span>
+            </div>
+          </button>
+          <select x-show="selectedFilter === 'color'" name="colors" multiple class="bg-white rounded-md border py-2 px-4 shadow-md absolute w-1/5 h-72" @click.away="selectedFilter = null">
+            <option @click="filters['colors'] = []; selectedFilter = null" value="" class="cursor-pointer hover:bg-gray-500 py-1 bg-gray-400">{% trans "Clear" %}</option>
+            {% for color in colors %}
+              <option @click="
+                    if (filters['colors'].includes('{{ color.color }}')) {
+                      filters['colors'] = filters['color'].filter(item => item !== '{{ color.color }}');
+                    } else {
+                      filters['colors'].push('{{ color.color }}');
+                    }
+                    "
+                    value="{{ color.color }}"
+                    class="cursor-pointer hover:bg-gray-200 py-1"
+                    :selected="filters['colors'].includes('{{ color.color }}') ? 'selected' : ''"
+              >
+              {{ color.color }}
+              </option>
+            {% endfor %}
+          </select>
+           
+          <button type="submit" class="ml-8 flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+            {% trans "Search" %}
+          </button>
+        </form>
+    </div>
+</div>
