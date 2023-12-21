@@ -87,6 +87,7 @@ if DEBUG:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
 
 ROOT_URLCONF = "dealscan.urls"
+SITE_ID = 1
 
 TEMPLATES = [
     {
@@ -161,7 +162,6 @@ AUTHENTICATION_BACKENDS = (
     "guardian.backends.ObjectPermissionBackend",
 )
 
-SITE_ID = 1
 LOGIN_REDIRECT_URL = "/dashboard"
 EMAIL_BACKEND = (
     "django.core.mail.backends.console.EmailBackend"
