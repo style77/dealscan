@@ -61,7 +61,9 @@ class DashboardView(BaseTemplateView):
         # get next billing date
         customer, _ = models.Customer.get_or_create(self.request.user)
         subscription = models.Subscription.objects.filter(customer=customer).first()
-        context["next_billing_date"] = subscription.current_period_end if subscription else "Never"
+        context["next_billing_date"] = (
+            subscription.current_period_end if subscription else "Never"
+        )
 
         return context
 
