@@ -1,6 +1,5 @@
 import random
-from typing import Any, Dict, Optional, List, Tuple
-from django_stubs_ext import ValuesQuerySet
+from typing import Any, Dict, Optional, List
 
 import stripe
 from django import http
@@ -92,8 +91,12 @@ class OffersView(BaseTemplateView):
 
         context["makes"] = self.__get_make_data()
         context["models"] = self.__get_model_data(current_selected_makes)
-        context["years"] = self.__get_production_year(current_selected_makes, current_selected_models)
-        context["colors"] = self.__get_colors(current_selected_makes, current_selected_models)
+        context["years"] = self.__get_production_year(
+            current_selected_makes, current_selected_models
+        )
+        context["colors"] = self.__get_colors(
+            current_selected_makes, current_selected_models
+        )
         context["transmissions"] = Offer.objects.values_list("transmission")
 
         context["sources"] = Offer.objects.values_list("source")
@@ -136,9 +139,7 @@ class OffersView(BaseTemplateView):
             .values_list("production_year", flat=True)
             .distinct()
             if current_selected_makes and current_selected_model
-            else Offer.objects.filter(
-                model__make__name__in=current_selected_makes
-            )
+            else Offer.objects.filter(model__make__name__in=current_selected_makes)
             .values_list("production_year", flat=True)
             .distinct()
             if current_selected_makes
@@ -167,9 +168,7 @@ class OffersView(BaseTemplateView):
             .values_list("metadata__color", flat=True)
             .distinct()
             if current_selected_makes and current_selected_model
-            else Offer.objects.filter(
-                model__make__name__in=current_selected_makes
-            )
+            else Offer.objects.filter(model__make__name__in=current_selected_makes)
             .values_list("metadata__color", flat=True)
             .distinct()
             if current_selected_makes
@@ -180,7 +179,9 @@ class OffersView(BaseTemplateView):
             else Offer.objects.values_list("metadata__color", flat=True).distinct()
         )
 
-        get_friendly_color = lambda color: [value for k, value in OfferMetadata.COLOR_CHOICES if k == color][0]
+        get_friendly_color = lambda color: [  # noqa: E731
+            value for k, value in OfferMetadata.COLOR_CHOICES if k == color
+        ][0]
 
         color_objects = [Color(color=get_friendly_color(color)) for color in colors]
         return sorted(color_objects, key=lambda x: x.color)
@@ -189,7 +190,9 @@ class OffersView(BaseTemplateView):
 class OfferComponentView(TemplateView):
     template_name = "all_offers.html"
 
-    def __filter_data(self, offers: Any, filter: Dict[str, Any]):  # todo change Any to BaseManager[Offer]
+    def __filter_data(
+        self, offers: Any, filter: Dict[str, Any]
+    ):  # todo change Any to BaseManager[Offer]
         if filter["value"] and filter["value"] != [""] and filter["value"] != ["Clear"]:
             offers = offers.filter(**{filter["key"]: filter["value"]})
         return offers
@@ -202,7 +205,9 @@ class OfferComponentView(TemplateView):
         filter_params = self.request.GET
         filtered_offers = base_queryset
 
-        get_unfriendly_color = lambda color: [k for k, value in OfferMetadata.COLOR_CHOICES if value == color][0]
+        get_unfriendly_color = lambda color: [  # noqa: E731
+            k for k, value in OfferMetadata.COLOR_CHOICES if value == color
+        ][0]
 
         filters = {
             "makes": {
@@ -219,7 +224,9 @@ class OfferComponentView(TemplateView):
             },
             "colors": {
                 "key": "metadata__color__in",
-                "value": [get_unfriendly_color(c) for c in filter_params.getlist("colors")],
+                "value": [
+                    get_unfriendly_color(c) for c in filter_params.getlist("colors")
+                ],
             },
         }
 
