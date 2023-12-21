@@ -104,7 +104,7 @@ class OffersView(BaseTemplateView):
 
         return context
 
-    def __get_make_data(self) -> List[namedtuple]:
+    def __get_make_data(self) -> List[Any]:
         Make = namedtuple("Make", ["name"])
         makes = Offer.objects.values_list("model__make__name", flat=True).distinct()
         make_objects = [Make(name=make) for make in makes]
@@ -112,7 +112,7 @@ class OffersView(BaseTemplateView):
 
     def __get_model_data(
         self, current_selected_makes: Optional[List[str]]
-    ) -> List[namedtuple]:
+    ) -> List[Any]:
         Model = namedtuple("Model", ["name"])
         models = (
             Offer.objects.filter(model__make__name__in=current_selected_makes)
@@ -128,7 +128,7 @@ class OffersView(BaseTemplateView):
         self,
         current_selected_makes: Optional[List[str]],
         current_selected_model: Optional[List[str]],
-    ) -> List[namedtuple]:
+    ) -> List[Any]:
         ProductionYear = namedtuple("ProductionYear", ["year"])
         production_years = (
             Offer.objects.filter(
@@ -157,7 +157,7 @@ class OffersView(BaseTemplateView):
         self,
         current_selected_makes: Optional[List[str]],
         current_selected_model: Optional[List[str]],
-    ) -> List[namedtuple]:
+    ) -> List[Any]:
         Color = namedtuple("Color", ["color"])
         colors = (
             Offer.objects.filter(
