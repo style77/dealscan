@@ -1,5 +1,6 @@
 import random
-from typing import Any, Dict, Optional, List
+from collections import namedtuple
+from typing import Any, Dict, List, Optional
 
 import stripe
 from django import http
@@ -13,8 +14,6 @@ from django.views.generic import TemplateView
 from djstripe import models
 from djstripe import settings as djstripe_settings
 from djstripe.models import Product
-
-from collections import namedtuple
 
 from crawler.models import Offer, OfferMetadata
 from polls.models import Poll, PollAnswer
