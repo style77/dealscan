@@ -1,0 +1,55 @@
+version: '3.3'
+
+services:
+  dealscan:
+    build:
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: python manage.py runserver 0.0.0.0:8000
+    container_name: app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=secret
+      - ENVIRONMENT=dev
+      - DATABASE_URL=postgres://postgres:postgres@db/dealscan
+      - REDIS_URL=redis://redis/0
+    depends_on:
+      - db
+      - redis
+      - migrations
+    volumes:
+      - .:/usr/src/app
+    healthcheck:
+      test: "curl --fail --silent --write-out 'HTTP CODE : %{http_code}
+
+        ' --output /dev/null http://127.0.0.1:8000/"
+      start_period: 60s
+      interval: 60s
+      timeout: 10s
+      retries: 10
+
+  sync:
+    build:
+      dockerfile: Dockerfile
+    container_name: sync
+    restart: no
+    command: python manage.py djstripe_sync_models
+    env_file:
+      - .env
+    depends_on:
+      dealscan:
+        condition: service_started
+
+  stripe-cli:
+    image: stripe/stripe-cli
+    command: listen --forward-to dealscan:8000/payments/webhook/ --skip-verify
+    depends_on:
+      - dealscan
+    env_file:
+      - .env
+    environment:
+      - STRIPE_API_KEY=${STRIPE_TEST_SECRET_KEY}

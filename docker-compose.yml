@@ -57,18 +57,6 @@ services:
       timeout: 10s
       retries: 10
 
-  sync:
-    build:
-      dockerfile: Dockerfile
-    container_name: sync
-    restart: no
-    command: python manage.py djstripe_sync_models
-    env_file:
-      - .env
-    depends_on:
-      dealscan:
-        condition: service_started
-
   refresher:
     build:
       dockerfile: Dockerfile
@@ -92,13 +80,3 @@ services:
     depends_on:
       db:
         condition: service_healthy
-
-  stripe-cli:
-    image: stripe/stripe-cli
-    command: listen --forward-to dealscan:8000/payments/webhook/ --skip-verify
-    depends_on:
-      - dealscan
-    env_file:
-      - .env
-    environment:
-      - STRIPE_API_KEY=${STRIPE_TEST_SECRET_KEY}

@@ -21,3 +21,5 @@ RUN poetry config virtualenvs.create false \
 COPY . /usr/src/app
 
 RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000
