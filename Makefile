@@ -1,10 +1,16 @@
 help:
 	@echo Dealscan Make commands
+	@echo `make run`                - run development server
 	@echo `make format`             - format codebase
 	@echo `make lint`               - check code
 	@echo `make migrations`         - make migrations
 	@echo `make migrate`            - migrate
 	@echo `make tailwind-watcher`   - run tailwind watcher
+
+# Run development server
+run:
+	@echo Running server...
+	docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 # Database
 
