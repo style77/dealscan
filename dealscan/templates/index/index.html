@@ -32,20 +32,30 @@
             </div>
           </div>
           <div class="justify-start items-start gap-3 inline-flex">
-            <a href="{{ demo_domain }}" class="rounded-lg justify-start items-start flex">
+            <a href="{% if DEMO %}{{ domain }}{% else %}{{ demo_domain }}{% endif %}" class="rounded-lg justify-start items-start flex">
               <div class="px-7 py-4 bg-white hover:bg-gray-50 transition rounded-lg shadow border border-gray-300 justify-center items-center gap-3 flex">
                 <div class="text-slate-700 text-lg font-semibold font-sans leading-7">
-                  {% trans 'Demo' %}
+                  {% if DEMO %}{% trans 'Real version' %}{% else %}{% trans 'Demo' %}{% endif %}
                 </div>
               </div>
             </a>
-            <a href="{% url 'account_signup' %}" class="rounded-lg justify-start items-start flex">
-              <div class="px-7 py-4 bg-green-500 hover:bg-green-600 transition rounded-lg shadow border justify-center items-center gap-2 flex">
-                <div class="text-white text-lg font-semibold font-sans leading-7">
-                  {% trans 'Sign up' %}
+            {% if request.user.is_authenticated %}
+              <a href="{% url 'dashboard' %}" class="rounded-lg justify-start items-start flex">
+                <div class="px-7 py-4 bg-green-500 hover:bg-green-600 transition rounded-lg shadow border justify-center items-center gap-2 flex">
+                  <div class="text-white text-lg font-semibold font-sans leading-7">
+                    {% trans 'Dashboard' %}
+                  </div>
                 </div>
-              </div>
-            </a>
+              </a>
+            {% else %}
+              <a href="{% url 'account_signup' %}" class="rounded-lg justify-start items-start flex">
+                <div class="px-7 py-4 bg-green-500 hover:bg-green-600 transition rounded-lg shadow border justify-center items-center gap-2 flex">
+                  <div class="text-white text-lg font-semibold font-sans leading-7">
+                    {% trans 'Sign up' %}
+                  </div>
+                </div>
+              </a>
+            {% endif %}
           </div>
         </div>
       </div>

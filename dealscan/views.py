@@ -10,6 +10,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 from djstripe.models import Product
 
+from django.conf import settings
+
 User = get_user_model()
 
 
@@ -21,6 +23,9 @@ class IndexView(TemplateView):
 
         current_domain = self.request.get_host()
         context["demo_domain"] = f"https://demo.{current_domain}/"
+        context["domain"] = f"https://{current_domain}/"
+
+        context["DEMO"] = settings.DEMO
 
         return context
 
