@@ -25,6 +25,8 @@ class IndexView(TemplateView):
         context["domain"] = f"https://{current_domain}/"
 
         context["DEMO"] = settings.DEMO
+        context["demo_username"] = settings.DEMO_USERNAME
+        context["demo_password"] = settings.DEMO_PASSWORD
 
         return context
 

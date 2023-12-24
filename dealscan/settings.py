@@ -402,4 +402,4 @@ SOCIALS = {
 
 DEMO_USERNAME = "demo"
 DEMO_EMAIL = "demo@demo.com"
-DEMO_PASSWORD = "demo"
+DEMO_PASSWORD = "#Demo1234"
