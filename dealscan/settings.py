@@ -52,7 +52,6 @@ CORE_APPS = ["accounts", "crawler", "polls"]
 THIRD_PARTY_APPS = [
     "simple_history",
     "guardian",
-    "django_celery_beat",
     "djmoney",  # MoneyField
     "django_countries",  # CountryField
     "widget_tweaks",
@@ -127,11 +126,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "dealscan.wsgi.application"
 
-
-# Redis
-
-REDIS_URL = os.getenv("REDIS_URL")
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -145,11 +139,8 @@ DATABASES = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
     }
 }
 
@@ -190,18 +181,6 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
-# Celery
-
-CELERY_BROKER_URL = REDIS_URL
-# CELERY_RESULT_BACKEND = "django-db"
-CELERY_ACCEPT_CONTENT = ["application/json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_IMPORTS = ()
-CELERY_REDBEAT_URL = os.getenv("REDBEAT_REDIS_URL", REDIS_URL)
-
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers.DatabaseScheduler"
 
 # Stripe
 

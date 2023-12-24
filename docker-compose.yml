@@ -1,17 +1,6 @@
 version: '3.3'
 
 services:
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6379:6379"
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   db:
     image: postgres:latest
     container_name: db
@@ -43,10 +32,8 @@ services:
       - SECRET_KEY=secret
       - ENVIRONMENT=dev
       - DATABASE_URL=postgres://postgres:postgres@db/dealscan
-      - REDIS_URL=redis://redis/0
     depends_on:
       - db
-      - redis
       - migrations
     volumes:
       - .:/usr/src/app

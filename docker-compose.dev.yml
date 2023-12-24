@@ -16,10 +16,8 @@ services:
       - SECRET_KEY=secret
       - ENVIRONMENT=dev
       - DATABASE_URL=postgres://postgres:postgres@db/dealscan
-      - REDIS_URL=redis://redis/0
     depends_on:
       - db
-      - redis
       - migrations
     volumes:
       - .:/usr/src/app
