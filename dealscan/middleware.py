@@ -12,7 +12,7 @@ class DemoModeMiddleware:
 
     def __call__(self, request):
         if request.method in ["POST", "PUT", "PATCH", "DELETE"]:
-            if request.path not in EXEMPT_PATHS:
+            if request.path not in EXEMPT_PATHS and not request.user.is_superuser:
                 return HttpResponseForbidden(
                     _("This action is not allowed in demo mode.")
                 )
