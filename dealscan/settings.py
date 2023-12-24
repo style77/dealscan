@@ -399,3 +399,7 @@ SOCIALS = {
     "TWITTER": "https://twitter.com/dealscan",
     "FACEBOOK": "https://facebook.com/dealscan",
 }
+
+DEMO_USERNAME = "demo"
+DEMO_EMAIL = "demo@demo.com"
+DEMO_PASSWORD = "demo"
