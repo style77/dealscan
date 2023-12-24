@@ -80,7 +80,7 @@ MIDDLEWARE = [
 ]
 
 if DEMO:
-    MIDDLEWARE.append("dealscan.middleware.ReadonlyExceptionHandlerMiddleware")
+    MIDDLEWARE.append("dealscan.middleware.DemoModeMiddleware")
 
 if DEBUG:
     MIDDLEWARE.append("django_browser_reload.middleware.BrowserReloadMiddleware")
