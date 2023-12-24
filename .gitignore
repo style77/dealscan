@@ -161,7 +161,8 @@ cython_debug/
 
 accounts/static/src/CACHE/*
 
-static/*
+/static/*
+!/static/src/output.css
 
 # Local .terraform directories
 **/.terraform/*
