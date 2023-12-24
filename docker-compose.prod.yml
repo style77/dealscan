@@ -12,7 +12,7 @@ services:
     env_file:
       - .env
     environment:
-      - DEBUG=False
+      - DEBUG=false
       - ENVIRONMENT=prod
       - DATABASE_URL=postgres://postgres:postgres@db/dealscan
     depends_on:
