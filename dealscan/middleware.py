@@ -1,5 +1,4 @@
 from django.http import HttpResponseForbidden
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 
@@ -8,7 +7,6 @@ class DemoModeMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if settings.DEMO:
-            if request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
-                return HttpResponseForbidden(_("This action is not allowed in demo mode."))
+        if request.method in ['POST', 'PUT', 'PATCH', 'DELETE']:
+            return HttpResponseForbidden(_("This action is not allowed in demo mode."))
         return self.get_response(request)
