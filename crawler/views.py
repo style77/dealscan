@@ -205,7 +205,9 @@ class OfferComponentView(TemplateView):
         filtered_offers = base_queryset
 
         get_unfriendly_color = lambda color: [  # noqa: E731
-            k for k, value in OfferMetadata.COLOR_CHOICES if value == color
+            k
+            for k, value in OfferMetadata.COLOR_CHOICES
+            if value == color and color != "" and color != "Clear"
         ][0]
 
         filters = {
