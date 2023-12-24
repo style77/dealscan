@@ -1,14 +1,13 @@
-from django.test import RequestFactory, TestCase
-from django.urls import reverse
-
+from allauth.core import context
+from allauth.utils import get_username_max_length
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
+from django.test import RequestFactory, TestCase
+from django.urls import reverse
 
 from accounts.forms import CustomSignupForm
-from allauth.utils import get_username_max_length
-from allauth.core import context
 
 
 class SignupFormTestTest(TestCase):

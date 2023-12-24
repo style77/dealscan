@@ -1,17 +1,18 @@
 from unittest.mock import ANY
 
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.urls import reverse
-
 from allauth.account.authentication import AUTHENTICATION_METHODS_SESSION_KEY
 from allauth.account.models import EmailAddress
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 
 
 class LoginFormTestTest(TestCase):
     def test_username_containing_at(self):
-        user = get_user_model().objects.create(username="testuser3", email="test@example.com")
+        user = get_user_model().objects.create(
+            username="testuser3", email="test@example.com"
+        )
         user.set_password("supersecret")
         user.save()
         EmailAddress.objects.create(
@@ -40,7 +41,9 @@ class LoginFormTestTest(TestCase):
 
     def test_redirect_when_authenticated(self):
         password = "doe"
-        user = get_user_model().objects.create(username="john", email="test@example.com", is_active=True)
+        user = get_user_model().objects.create(
+            username="john", email="test@example.com", is_active=True
+        )
         if password:
             user.set_password(password)
         else:
@@ -53,7 +56,9 @@ class LoginFormTestTest(TestCase):
 
     def test_login_unverified_account_optional(self):
         """Tests login behavior when email verification is optional."""
-        user = get_user_model().objects.create(username="john", email="test@example.com")
+        user = get_user_model().objects.create(
+            username="john", email="test@example.com"
+        )
         user.set_password("doe")
         user.save()
         EmailAddress.objects.create(
