@@ -20,6 +20,8 @@ RUN poetry config virtualenvs.create false \
 
 COPY . /usr/src/app
 
+RUN chmod +x /usr/src/app/crawler/jobs.sh
+
 RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
