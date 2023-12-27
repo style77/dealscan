@@ -57,6 +57,7 @@
 {% url "submit-answer" as submit_answer_url %}
 <script>
   async function submitAnswer(answer) {
+    console.log(answer)
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
     const res = await fetch("{{ submit_answer_url }}", {
       method: "post",
@@ -70,7 +71,17 @@
       })
     })
 
-    const data = await res.json()
+
+    let data
+    if (!res.ok) {
+      data = await res.text()
+      data = {
+        status: 'error',
+        message: data
+      }
+    } else {
+      data = await res.json()
+    }
 
     return data
   }
