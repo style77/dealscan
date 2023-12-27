@@ -25,4 +25,5 @@ web/static/CACHE
 stats
 Dockerfile
 docker-compose.yml
-static/
+/static/*
+!/static/src/output.css
