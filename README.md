@@ -67,7 +67,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Dealscan Screenshot][product-screenshot]](https://github.com/style77/newsltr)
+[![Dealscan Screenshot][product-screenshot]](https://github.com/style77/dealscan)
 
 Dealscan is car offers aggregator, written in Django with use of Alpine.js and HTMX.
 It makes you as a car dealer faster. Project is open source, check out the [Roadmap](#roadmap) and [Contributing](#contributing) section to see how you can help.
@@ -164,7 +164,7 @@ server {
 - notifications (email, telegram, sms)
 - translations
 
-See the [open issues](https://github.com/Style77/newsltr/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/Style77/dealscan/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -207,14 +207,14 @@ Project Link: [https://github.com/Style77/dealscan](https://github.com/Style77/d
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 <!-- Shields -->
-[contributors-shield]: https://img.shields.io/github/contributors/style77/newsltr?style=for-the-badge
-[contributors-url]: https://github.com/Style77/newsltr/graphs/contributors
-[stars-shield]: https://img.shields.io/github/stars/style77/newsltr?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/style77/dealscan?style=for-the-badge
+[contributors-url]: https://github.com/Style77/dealscan/graphs/contributors
+[stars-shield]: https://img.shields.io/github/stars/style77/dealscan?style=for-the-badge
 [stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[mainabilities-shield]: https://img.shields.io/codeclimate/maintainability/Style77/newsltr?style=for-the-badge
-[mainabilities-url]: https://codeclimate.com/github/Style77/newsltr
-[technical-debt-shield]: https://img.shields.io/codeclimate/tech-debt/Style77/newsltr?style=for-the-badge&logoColor=red&color=red
-[technical-debt-url]: https://codeclimate.com/github/Style77/newsltr
+[mainabilities-shield]: https://img.shields.io/codeclimate/maintainability/Style77/dealscan?style=for-the-badge
+[mainabilities-url]: https://codeclimate.com/github/Style77/dealscan
+[technical-debt-shield]: https://img.shields.io/codeclimate/tech-debt/Style77/dealscan?style=for-the-badge&logoColor=red&color=red
+[technical-debt-url]: https://codeclimate.com/github/Style77/dealscan
 [build-shield]: https://img.shields.io/github/actions/workflow/status/Style77/dealscan/build.yml?label=Build&style=for-the-badge
 [build-url]: https://github.com/Style77/dealscan
 <!-- Images -->
