@@ -22,7 +22,7 @@
     <a href="https://github.com/Style77/dealscan"><strong>Explore »</strong></a>
     <br />
     <br />
-    <a href="https://demo.dealscan.io">View</a>
+    <a href="https://dealscan.joachimhodana.com">View</a>
     ·
     <a href="https://github.com/Style77/dealscan/issues">Report Bug</a>
     ·
@@ -72,9 +72,9 @@
 Dealscan is car offers aggregator, written in Django with use of Alpine.js and HTMX.
 It makes you as a car dealer faster. Project is open source, check out the [Roadmap](#roadmap) and [Contributing](#contributing) section to see how you can help.
 
-Checkout the [demo](https://demo.dealscan.io) or [host it yourself](#getting-started).
+Checkout the [demo](https://dealscan.joachimhodana.com) or [host it yourself](#getting-started).
 
-If you don't want to host it yourself, you can use the hosted version at [dealscan.io](https://dealscan.io).
+If you don't want to host it yourself, you can use the hosted version at [dealscan.joachimhodana.com](https://dealscan.joachimhodana.com).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
